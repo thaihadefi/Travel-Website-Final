@@ -22,6 +22,8 @@ app.use(express.static(path.join(__dirname, "public")))
 
 // Create global variables in PUG files
 app.locals.pathAdmin = variableConfig.pathAdmin;
+// TinyMCE API key from env (optional)
+app.locals.tinyMceApiKey = process.env.TINYMCE_API_KEY || '';
 
 // Create global variables in backend files
 global.pathAdmin = variableConfig.pathAdmin;
