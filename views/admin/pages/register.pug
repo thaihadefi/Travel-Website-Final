@@ -1,0 +1,62 @@
+extends ../layouts/account.pug
+
+block main
+  .form-account
+    h1.inner-title Register
+    .inner-desc Create an account to continue
+
+    form.inner-form(id="register-form")
+      .inner-group
+        label(
+          for="fullName"
+          class="inner-label"
+        ) Họ tên
+        input(
+          type="text"
+          name="fullName"
+          id="fullName"
+          placeholder="Example: Le Van A"
+          class="inner-control"
+        )
+      .inner-group
+        label(
+          for="email"
+          class="inner-label"
+        ) Email
+        input(
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Example: levana@gmail.com"
+          class="inner-control"
+        )
+      .inner-group
+        label(
+          for="password"
+          class="inner-label"
+        ) Mật khẩu
+        input(
+          type="password"
+          name="password"
+          id="password"
+          class="inner-control"
+        )
+        span(class="inner-toggle-password" toggle-password)
+          i.fa-solid.fa-eye
+      .inner-meta
+        .inner-confirm
+          input(
+            type="checkbox"
+            name="agree"
+            id="agree"
+            class="inner-check"
+          )
+          label(
+            for="agree"
+            class="inner-label"
+          ) I agree to the terms and conditions
+      button(class="inner-button") Register
+
+    .inner-more
+      span Do you have an account?
+      a(href=`/${pathAdmin}/account/login`) Login

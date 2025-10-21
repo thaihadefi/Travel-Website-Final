@@ -1,0 +1,66 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Role
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/setting/role/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="delete") Delete
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+      .inner-button-create
+        a(href=`/${pathAdmin}/setting/role/create`) + Create New
+      .inner-button-trash
+        a(href=`/${pathAdmin}/setting/role/trash`) Trash
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Role Name
+            th Short Description
+            th Action
+        tbody
+          if roleList.length > 0
+            each item in roleList
+              tr
+                td
+                  input(type="checkbox" check-item=item.id)
+                td #{item.name}
+                td #{item.description}
+                td
+                  .inner-buttons
+                    a(
+                      href=`/${pathAdmin}/setting/role/edit/${item.id}` 
+                      class="inner-edit"
+                      )
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    button(
+                      class="inner-delete"
+                      button-delete
+                      data-api=`/${pathAdmin}/setting/role/delete/${item.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="4" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No roles found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

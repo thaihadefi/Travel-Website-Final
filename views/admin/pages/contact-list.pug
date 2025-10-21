@@ -1,0 +1,72 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Contact Information
+
+  //- Section 4
+  .section-4
+    .inner-wrap
+      .inner-item
+        <i class="fa-solid fa-filter"></i> Filter
+      .inner-item
+        input(type="date" filter-start-date min="2000-01-01" max="2099-12-31")
+        span -
+        input(type="date" filter-end-date min="2000-01-01" max="2099-12-31")
+      .inner-item.inner-reset(filter-reset)
+        <i class="fa-solid fa-rotate-left"></i> Reset Filter
+  //- End Section 4
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/contact/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="delete") Delete
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+      .inner-button-trash
+        a(href=`/${pathAdmin}/contact/trash`) Trash
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Email
+            th Created At
+            th(class="inner-center") Action
+        tbody
+          if contactList.length > 0
+            each item in contactList
+              tr
+                td
+                  input(type="checkbox" check-item=item.id)
+                td #{item.email}
+                td #{item.createdAtFormat}
+                td(class="inner-center")
+                  .inner-buttons
+                    button(
+                      class="inner-delete"
+                      button-delete
+                      data-api=`/${pathAdmin}/contact/delete/${item.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="4" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No contacts found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

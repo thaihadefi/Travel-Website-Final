@@ -1,0 +1,96 @@
+extends ../layouts/default.pug
+
+block main
+  if (permissions.includes("dashboard-view"))
+    h1.box-title Dashboard
+
+    //- Section 1
+    .section-1
+      .inner-item
+        .inner-icon
+          img(src="/admin/assets/images/section-1-icon-1.svg", alt="")
+        .inner-content
+          .inner-title Admin Accounts
+          .inner-number #{overview.totalAdmin.toLocaleString("vi-VN")}
+      .inner-item
+        .inner-icon
+          img(src="/admin/assets/images/section-1-icon-2.svg", alt="")
+        .inner-content
+          .inner-title Orders
+          .inner-number #{overview.totalOrder.toLocaleString("vi-VN")}
+      .inner-item
+        .inner-icon
+          img(src="/admin/assets/images/section-1-icon-3.svg", alt="")
+        .inner-content
+          .inner-title Revenue
+          .inner-number #{overview.totalRevenue.toLocaleString("vi-VN")}đ
+    //- End Section 1
+
+    //- Section 2
+    .section-2
+      .inner-head
+        .inner-title Revenue Chart
+        .inner-filter
+          input(type="month" input-change-month)
+      .inner-chart
+        canvas(id="revenue-chart")
+    //- End Section 2
+
+    //- Section 3
+    .section-3
+      .inner-title Recent Orders
+      .table-1
+        table
+          thead
+            tr
+              th Code
+              th Customer Information
+              th Tour List
+              th Payment
+              th Status
+              th.text-right Booking Date
+          tbody
+            if recentOrders && recentOrders.length > 0
+              each order in recentOrders
+                tr
+                  td
+                    .inner-code #{order.code}
+                  td
+                    div Full Name: #{order.fullName}
+                    div Phone: #{order.phone}
+                    if order.note
+                      div Note: #{order.note}
+                  td
+                    .inner-list
+                      each item in order.items
+                        .inner-item
+                          .inner-image
+                            img(src=item.avatar, alt="")
+                          .inner-info
+                            .inner-name #{item.title}
+                            .inner-quantity
+                              if item.adults > 0
+                                div Adults: #{item.adults} x #{item.priceAdults.toLocaleString("vi-VN")}đ
+                              if item.children > 0
+                                div Children: #{item.children} x #{item.priceChildren.toLocaleString("vi-VN")}đ
+                              if item.babies > 0
+                                div Babies: #{item.babies} x #{item.priceBabies.toLocaleString("vi-VN")}đ
+                  td
+                    div Sub Total: #{order.subTotal.toLocaleString("vi-VN")}đ
+                    if order.discount > 0
+                      div Discount: #{order.discount.toLocaleString("vi-VN")}đ
+                    div Total: #{order.total.toLocaleString("vi-VN")}đ
+                    div Payment Method: #{order.paymentMethod}
+                    div Payment Status: #{order.paymentStatus}
+                  td
+                    - const statusClass = order.status === 'initial' ? 'badge-orange' : order.status === 'confirmed' ? 'badge-green' : order.status === 'canceled' ? 'badge-red' : order.status === 'completed' ? 'badge-blue' : 'badge-orange'
+                    .badge(class=statusClass)= order.status.charAt(0).toUpperCase() + order.status.slice(1)
+                  td.text-right
+                    div #{order.createdAtTime}
+                    div #{order.createdAtDate}
+            else
+              tr
+                td(colspan="6" style="text-align: center; padding: 20px;") No recent orders found.
+    //- End Section 3
+  else
+    h1.box-title No permissions.

@@ -1,0 +1,135 @@
+extends ../layouts/default.pug
+include ../mixins/box-breadcrumb.pug
+
+block main
+  +box-breadcrumb(breadcrumb)
+
+  .section-10
+    .container
+      .inner-wrap
+        .inner-left
+          // Images list
+          .box-images
+            .inner-images-main
+              .swiper.swiper-box-images-main
+                .swiper-wrapper
+                  each image in tourDetail.images
+                    .swiper-slide
+                      .inner-image
+                        img(
+                          alt="" 
+                          src=image
+                          )
+            .inner-images-thumb
+              .swiper.swiper-box-images-thumb
+                .swiper-wrapper
+                  each image in tourDetail.images
+                    .swiper-slide
+                      .inner-image
+                        img(
+                          alt="" 
+                          src=image
+                          )
+          // End images list
+          // Tour info
+          .box-tour-info
+            .inner-title Tour Information
+            .inner-content !{tourDetail.information}
+            .inner-read-more
+              button.button-outline See more
+          // End Tour Info
+          // Tour Schedule
+          .box-tour-schedule
+            .inner-title-main Tour Schedule
+            .inner-list
+              each item in tourDetail.schedules
+                .inner-item
+                  .inner-title #{item.title}
+                  .inner-content !{item.description}
+          // End Tour Schedule
+        .inner-right
+          .box-tour-detail
+            .inner-title-main Your Trip
+            .inner-product
+              .inner-image
+                img(
+                  alt=tourDetail.name
+                  src=tourDetail.avatar
+                  )
+              .inner-info
+                .inner-title #{tourDetail.name}
+            .inner-meta
+              .inner-item
+                i.fa-solid.fa-calendar-days
+                span Duration:
+                span.inner-hl #{tourDetail.time}
+              .inner-item
+                i.fa-solid.fa-car
+                span Vehicles:
+                span.inner-hl #{tourDetail.vehicle}
+              .inner-item
+                i.fa-solid.fa-calendar-days
+                span Departure Date:
+                span.inner-hl #{tourDetail.departureDateFormat}
+            .inner-group
+              .inner-label Departure:
+              select(name="locationFrom")
+                each item in tourDetail.cityList
+                  option(value=item.id) #{item.name}
+            .inner-group
+              .inner-label Number of passengers
+              .inner-list
+                .inner-item
+                  .inner-item-label Adults:
+                  .inner-item-input
+                    input(
+                      value="1" 
+                      type="number"
+                      min="0"
+                      max=tourDetail.stockAdult
+                      input-quantity="stockAdult"
+                      data-price=tourDetail.priceNewAdult
+                      name="quantityAdult"
+                      )
+                  .inner-item-price
+                    span(label-quantity="stockAdult") 1
+                    span x
+                    span.inner-hl #{tourDetail.priceNewAdult.toLocaleString("vi-VN")}
+                .inner-item
+                  .inner-item-label Children:
+                  .inner-item-input
+                    input(
+                      value="0" 
+                      type="number"
+                      min="0"
+                      max=tourDetail.stockChildren
+                      input-quantity="stockChildren"
+                      data-price=tourDetail.priceNewChildren
+                      name="quantityChildren"
+                      )
+                  .inner-item-price
+                    span(label-quantity="stockChildren") 0
+                    span x
+                    span.inner-hl #{tourDetail.priceNewChildren.toLocaleString("vi-VN")}
+                .inner-item
+                  .inner-item-label Babies:
+                  .inner-item-input
+                    input(
+                      value="0" 
+                      type="number"
+                      min="0"
+                      max=tourDetail.stockBaby
+                      input-quantity="stockBaby"
+                      data-price=tourDetail.priceNewBaby
+                      name="quantityBaby"
+                      )
+                  .inner-item-price
+                    span(label-quantity="stockBaby") 0
+                    span x
+                    span.inner-hl #{tourDetail.priceNewBaby.toLocaleString("vi-VN")}
+            .inner-total
+              .inner-label Total:
+              .inner-price
+                span(total-price) #{tourDetail.priceNewAdult.toLocaleString("vi-VN")}
+                span đ
+            button.inner-button-add-cart(tour-id=tourDetail.id) Add To Cart

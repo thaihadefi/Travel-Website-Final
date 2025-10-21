@@ -1,0 +1,66 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Contact Trash
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/contact/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="undo") Restore
+            option(value="destroy") Delete Permanently
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Email
+            th Created At
+            th Deleted At
+            th(class="inner-center") Action
+        tbody
+          if contactList.length > 0
+            each item in contactList
+              tr
+                td
+                  input(type="checkbox" check-item=item.id)
+                td #{item.email}
+                td #{item.createdAtFormat}
+                td #{item.deletedAtFormat}
+                td(class="inner-center")
+                  .inner-buttons
+                    button(
+                      class="inner-undo"
+                      button-undo
+                      data-api=`/${pathAdmin}/contact/undo/${item.id}`
+                      )
+                      <i class="fa-solid fa-rotate-left"></i>
+                    button(
+                      class="inner-delete"
+                      button-destroy
+                      data-api=`/${pathAdmin}/contact/destroy/${item.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="5" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No contacts found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

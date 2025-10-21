@@ -1,0 +1,93 @@
+extends ../layouts/default.pug
+
+block main
+  .order-track-page
+    .container
+      .inner-wrap
+        h1.inner-title(
+          data-aos-duration="800" 
+          data-aos="fade-up"
+        ) Track Your Order
+        p.inner-desc(
+          data-aos-delay="150" 
+          data-aos-duration="800" 
+          data-aos="fade-up"
+        ) Enter your order code and phone number to check order status
+        
+        form.inner-form(
+          id="order-track-form"
+          data-aos-delay="300" 
+          data-aos-duration="800" 
+          data-aos="fade-up"
+        )
+          .inner-form-group
+            label.inner-label Order Code
+            input.inner-input(
+              type="text"
+              name="orderCode"
+              id="orderCode"
+              placeholder="Example: OD1234567890"
+            )
+          
+          .inner-form-group
+            label.inner-label Phone Number
+            input.inner-input(
+              type="text"
+              name="phone"
+              id="phone"
+              placeholder="Example: 0901234567"
+            )
+          
+          button.inner-button(type="submit")
+            i.fa-solid.fa-magnifying-glass
+            | Track Order
+        
+        .inner-result(style="display: none;")
+          .inner-result-header
+            h2.inner-result-title Order Details
+          
+          .inner-order-info
+            .inner-info-row
+              .inner-info-label Order Code:
+              .inner-info-value(id="result-code")
+            
+            .inner-info-row
+              .inner-info-label Order Date:
+              .inner-info-value(id="result-date")
+            
+            .inner-info-row
+              .inner-info-label Customer Name:
+              .inner-info-value(id="result-name")
+            
+            .inner-info-row
+              .inner-info-label Phone Number:
+              .inner-info-value(id="result-phone")
+            
+            .inner-info-row
+              .inner-info-label Payment Method:
+              .inner-info-value(id="result-payment-method")
+            
+            .inner-info-row
+              .inner-info-label Payment Status:
+              .inner-info-value(id="result-payment-status")
+            
+            .inner-info-row
+              .inner-info-label Order Status:
+              .inner-info-value.inner-status(id="result-status")
+          
+          .inner-tour-list
+            h3.inner-section-title Tour Information
+            .inner-tours(id="result-tours")
+          
+          .inner-total-info
+            .inner-total-row
+              .inner-total-label Subtotal:
+              .inner-total-value(id="result-subtotal")
+            
+            .inner-total-row
+              .inner-total-label Discount:
+              .inner-total-value(id="result-discount")
+            
+            .inner-total-row.inner-total-final
+              .inner-total-label Total:
+              .inner-total-value(id="result-total")

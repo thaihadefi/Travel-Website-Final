@@ -1,0 +1,219 @@
+extends ../layouts/default.pug
+include ../mixins/product.pug
+include ../mixins/section-5.pug
+
+block main
+  // Section 1
+  section.section-1(style=settingWebsiteInfo.backgroundSection1 ? `background-image: url('${settingWebsiteInfo.backgroundSection1}');` : "")
+    .container
+      .inner-wrap
+        h1.inner-title(
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          )
+          | Travel around the world
+          br
+          | Go to anywhere you want
+        p.inner-desc(
+          data-aos-delay="150" 
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          )
+          | Find your favourite destination with us, we will help you to make your dream come true.
+        form.inner-form(
+          data-aos-delay="300" 
+          data-aos-duration="800" 
+          data-aos="fade-up" 
+          action=""
+          form-search
+          )
+          .inner-box.inner-address
+            .inner-input-group
+              img.inner-icon(src="/assets/images/icon-address.svg")
+              input.inner-input(
+                placeholder="Where do you want to go?" 
+                type="text"
+                name="locationTo"
+                )
+          .inner-box.inner-user
+            .inner-input-group
+              img.inner-icon(src="/assets/images/icon-user.svg")
+              input.inner-input(
+                readonly="" 
+                value="" 
+                placeholder="Number of passengers" 
+                type="text"
+                )
+              i.fa-solid.fa-angle-down.inner-down
+            .inner-quantity
+              .inner-item
+                .inner-label Adults
+                .inner-count
+                  span.inner-down -
+                  input.inner-number(
+                    value="0" 
+                    readonly
+                    name="stockAdult"
+                    )
+                  span.inner-up +
+              .inner-item
+                .inner-label Children
+                .inner-count
+                  span.inner-down -
+                  input.inner-number(
+                    value="0" 
+                    readonly
+                    name="stockChildren"
+                    )
+                  span.inner-up +
+              .inner-item
+                .inner-label Babies
+                .inner-count
+                  span.inner-down -
+                  input.inner-number(
+                    value="0" 
+                    readonly
+                    name="stockBaby"
+                    )
+                  span.inner-up +
+          .inner-box.inner-calendar
+            .inner-input-group
+              img.inner-icon(src="/assets/images/icon-calendar.svg")
+              input.inner-input(
+                placeholder="Departure Date" 
+                type="date"
+                name="departureDate"
+                min="2000-01-01"
+                max="2099-12-31"
+                )
+          button.inner-button
+            i.fa-solid.fa-magnifying-glass
+            | Search
+  // End Section 1
+  // Section 2
+  .section-2(
+    data-aos-duration="800" 
+    data-aos="fade-up"
+    )
+    .container
+      .inner-wrap
+        .inner-info
+          h2.inner-title
+            | HOT DEALS 2025
+            br
+            | LAST MINUTE TOURS
+          .inner-desc DON'T MISS OUT ON THESE GREAT DEALS
+          .inner-clock-title END IN
+          .inner-clock-number(clock-expire=hotDealsDeadline)
+            .inner-item
+              .inner-number 00
+              .inner-label Days
+            .inner-item
+              .inner-number 00
+              .inner-label Hours
+            .inner-item
+              .inner-number 00
+              .inner-label Minutes
+            .inner-item
+              .inner-number 00
+              .inner-label Seconds
+          .inner-discount-title DISCOUNT 
+          .inner-discount-price
+            | 990.000
+            span.inner-unit đ
+        .inner-list
+          .swiper.swiper-section-2
+            .swiper-wrapper
+              each item in tourListSection2
+                .swiper-slide
+                  +product-item(item)
+  // End Section 2
+  // Section 3
+  .section-3
+    .container
+      h2.box-title(
+        data-aos-duration="800" 
+        data-aos="fade-up"
+        ) Promotional Offers
+      .inner-wrap(
+        data-aos-delay="150" 
+        data-aos-duration="800" 
+        data-aos="fade-up"
+        )
+        if settingWebsiteInfo.bannersSection3 && settingWebsiteInfo.bannersSection3.length > 0
+          .swiper.swiper-section-3
+            .swiper-wrapper
+              each banner in settingWebsiteInfo.bannersSection3
+                .swiper-slide
+                  .inner-item
+                    a(href="#")
+                      img(alt="" src=banner)
+            .swiper-pagination
+        else
+          div.no-data No data.
+  // End Section 3
+  // Section 4
+  if(categorySection4)
+    .section-4
+      .container
+        h2.box-title(
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          ) #{categorySection4.name}
+        if (tourListSection4.length > 0)
+          .inner-wrap(
+            data-aos-delay="150" 
+            data-aos-duration="800" 
+            data-aos="fade-up"
+            )
+              each item in tourListSection4
+                +product-item(item)
+        else
+          div.no-data(
+            data-aos-delay="150" 
+            data-aos-duration="800" 
+            data-aos="fade-up"
+          ) No data.
+        .inner-button(
+          data-aos-delay="300" 
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          )
+          a.button-outline(href=`/category/${categorySection4.slug}`) See All
+  // End Section 4
+  // Section 5
+  +section-5(settingWebsiteInfo.bannerSection5)
+  // End Section 5
+  // Section 6
+  if(categorySection6)
+    .section-4
+      .container
+        h2.box-title(
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          ) #{categorySection6.name}
+        if (tourListSection6.length > 0)
+          .inner-wrap(
+            data-aos-delay="150" 
+            data-aos-duration="800" 
+            data-aos="fade-up"
+            )
+              each item in tourListSection6
+                +product-item(item)
+        else
+          div.no-data(
+            data-aos-delay="150" 
+            data-aos-duration="800" 
+            data-aos="fade-up"
+          ) No data.
+        .inner-button(
+          data-aos-delay="300" 
+          data-aos-duration="800" 
+          data-aos="fade-up"
+          )
+          a.button-outline(href=`/category/${categorySection6.slug}`) See All
+  // End Section 6
+  // Section 7
+  +section-5(settingWebsiteInfo.bannerSection7)
+  // End Section 7
+  

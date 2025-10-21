@@ -1,0 +1,74 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Order: #{orderDetail.code}
+
+  //- Section 8
+  .section-8
+    form(id="order-edit-form")
+      .inner-group(style="display: none;")
+        label(for="id" class="inner-label") ID
+        input(type="text" id="id" name="id" value=orderDetail.id)
+      .inner-group
+        label(for="fullName" class="inner-label") Customer Name
+        input(type="text" id="fullName" name="fullName" value=orderDetail.fullName)
+      .inner-group
+        label(for="phone" class="inner-label") Phone Number
+        input(type="text" id="phone" name="phone" value=orderDetail.phone)
+      .inner-group.inner-two-col
+        label(for="note" class="inner-label") Note
+        textarea(id="note" name="note") #{orderDetail.note}
+      .inner-group
+        label(for="paymentMethod" class="inner-label") Payment Method
+        select(id="paymentMethod" name="paymentMethod")
+          each item in paymentMethodList
+            option(
+              value=item.value
+              selected=(item.value == orderDetail.paymentMethod)
+              ) #{item.label}
+      .inner-group
+        label(for="paymentStatus" class="inner-label") Payment Status
+        select(id="paymentStatus" name="paymentStatus")
+          each item in paymentStatusList
+            option(
+              value=item.value
+              selected=(item.value == orderDetail.paymentStatus)
+              ) #{item.label}
+      .inner-group
+        label(class="inner-label") Order Date
+        input(type="datetime-local" value=orderDetail.createdAtFormat readonly)
+      .inner-group
+        label(for="status" class="inner-label") Status
+        select(id="status" name="status")
+          each item in statusList
+            option(
+              value=item.value
+              selected=(item.value == orderDetail.status)
+              ) #{item.label}
+      .inner-group
+        label(class="inner-label") Tour List
+        .inner-order-list
+          each item in orderDetail.items
+            .inner-order-item
+              .inner-order-image
+                img(src=item.avatar)
+              .inner-order-content
+                .inner-order-name #{item.name}
+                .inner-order-text
+                  div Adults: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                  div Children: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                  div Babies: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
+                  div Departure Date: #{item.departureDateFormat}
+                  div Departure: #{item.cityName}
+      .inner-group
+        label(class="inner-label") Payment
+        .inner-order-total
+          div Estimated: #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
+          div Discount: #{orderDetail.discount.toLocaleString("vi-VN")}đ
+          div Total: <span class="inner-hl">#{orderDetail.total.toLocaleString("vi-VN")}đ</span>
+      .inner-button.inner-two-col
+        button Update
+    .inner-back
+      a(href=`/${pathAdmin}/order/list`) Back to list
+  //- End Section 8

@@ -1,0 +1,105 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Account Admin
+
+  //- Section 4
+  .section-4
+    .inner-wrap
+      .inner-item
+        <i class="fa-solid fa-filter"></i> Filter
+      .inner-item
+        select(filter-status)
+          option(value="") Status
+          option(value="active") Active
+          option(value="inactive") Inactive
+      .inner-item
+        input(type="date" filter-start-date min="2000-01-01" max="2099-12-31")
+        span -
+        input(type="date" filter-end-date min="2000-01-01" max="2099-12-31")
+      .inner-item
+        select(filter-role)
+          option(value="") Role
+          each item in roleList
+            option(value=item.id) #{item.name}
+      .inner-item.inner-reset(filter-reset)
+        <i class="fa-solid fa-rotate-left"></i> Reset Filter
+  //- End Section 4
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/setting/account-admin/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="active") Active
+            option(value="inactive") Inactive
+            option(value="delete") Delete
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+      .inner-button-create
+        a(href=`/${pathAdmin}/setting/account-admin/create`) + Create New
+      .inner-button-trash
+        a(href=`/${pathAdmin}/setting/account-admin/trash`) Trash
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Full Name
+            th(class="inner-center") Avatar
+            th Email
+            th Phone Number
+            th Role
+            th Position
+            th Status
+            th Action
+        tbody
+          if accountAdminList.length > 0
+            each item in accountAdminList
+              tr
+                td
+                  input(type="checkbox" check-item=item.id)
+                td #{item.fullName}
+                td(class="inner-center")
+                  img(src=item.avatar class="inner-avatar")
+                td #{item.email}
+                td #{item.phone}
+                td #{item.roleName}
+                td #{item.positionCompany}
+                td
+                  if (item.status == "initial")
+                    .badge.badge-orange Initial
+                  else if (item.status == "active")
+                    .badge.badge-green Active
+                  else if (item.status == "inactive")
+                    .badge.badge-red Inactive
+                td
+                  .inner-buttons
+                    a(href=`/${pathAdmin}/setting/account-admin/edit/${item.id}` class="inner-edit")
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    button(
+                      class="inner-delete"
+                      button-delete
+                      data-api=`/${pathAdmin}/setting/account-admin/delete/${item.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="9" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No accounts found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

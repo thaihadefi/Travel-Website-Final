@@ -1,0 +1,53 @@
+.box-filter
+  .inner-head
+    .inner-title Filter
+    i.fa-solid.fa-filter
+  .inner-body
+    .inner-group
+      .inner-label Departure From
+      select(name="locationFrom")
+        option(value="") -- Choose Departure City --
+        each item in cityList
+          option(value=item.id) #{item.name}
+    .inner-group
+      .inner-label Departure Date
+      input(
+        name="departureDate" 
+        type="date"
+        )
+    .inner-group
+      .inner-label Number of passengers
+      .inner-input-list
+        .inner-input-item
+          .inner-input-label Adults:
+          input(
+            value="0" 
+            name="stockAdult" 
+            type="number"
+            )
+        .inner-input-item
+          .inner-input-label Children:
+          input(
+            value="0" 
+            name="stockChildren" 
+            type="number"
+            )
+        .inner-input-item
+          .inner-input-label Babies:
+          input(
+            value="0" 
+            name="stockBaby" 
+            type="number"
+            )
+    .inner-group
+      .inner-label Price Range
+      select(name="price")
+        option(value="") -- Choose Price Range --
+        option(value="0-999999") Below 1 million
+        option(value="1000000-3000000") From 1 million to 3 million
+        option(value="3000000-6000000") From 3 million to 6 million
+        option(value="6000000-10000000") From 6 million to 10 million
+        option(value="10000000-1000000000") Above 10 million
+    .inner-group
+      button.inner-button Apply
+.inner-overlay
