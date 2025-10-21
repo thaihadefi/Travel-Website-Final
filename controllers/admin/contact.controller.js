@@ -61,7 +61,7 @@ module.exports.list = async (req, res) => {
   pagination.currentPage = page;
 
   res.render("admin/pages/contact-list", {
-    pageTitle: "Contact Information",
+    pageTitle: "Contact Management",
     contactList: contactList,
     pagination: pagination
   });
