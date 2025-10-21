@@ -681,24 +681,6 @@ input, select, textarea, button {
   color: #333333;
 }
 
-.section-2 .inner-info .inner-discount-title {
-  font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-  color: #fff;
-}
-
-.section-2 .inner-info .inner-discount-price {
-  font-weight: 700;
-  font-size: 40px;
-  text-align: center;
-  color: #FFD63A;
-}
-
-.section-2 .inner-info .inner-discount-price .inner-unit {
-  text-decoration: underline;
-}
-
 .section-2 .inner-list {
   width: calc(78% - 32px);
 }
@@ -2770,14 +2752,6 @@ input, select, textarea, button {
 .btn-submit:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(0, 87, 183, 0.3);
-}
-
-.section-map {
-  margin-bottom: 0;
-}
-
-.section-map iframe {
-  display: block;
 }
 
 @media (max-width: 991.98px) {

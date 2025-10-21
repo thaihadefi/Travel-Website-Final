@@ -267,6 +267,17 @@ module.exports.edit = async (req, res) => {
       return;
     }
 
+    // Ensure locations are strings for proper comparison in the Pug template
+    if (tourDetail.locations && Array.isArray(tourDetail.locations)) {
+      try {
+        tourDetail.locations = tourDetail.locations.map(item => item ? item.toString() : item);
+      } catch (e) {
+        // keep original if mapping fails
+      }
+    } else {
+      tourDetail.locations = [];
+    }
+
     if(tourDetail.departureDate) {
       tourDetail.departureDateFormat = moment(tourDetail.departureDate).format("YYYY-MM-DD");
     }
