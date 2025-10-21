@@ -1,0 +1,98 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Order Trash
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/order/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="undo") Restore
+            option(value="destroy") Delete Permanently
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Code
+            th Customer Infomation
+            th Tour List
+            th Payment
+            th Status
+            th.inner-center Order Date
+            th.inner-center Deleted At
+            th Action
+        tbody
+          if orderList.length > 0
+            each orderDetail in orderList
+              tr
+                td
+                  input(type="checkbox" check-item=orderDetail.id)
+                td
+                  .inner-code #{orderDetail.code}
+                td
+                  div Full : #{orderDetail.fullName}
+                  div Phone Number: #{orderDetail.phone}
+                  div Note: #{orderDetail.note}
+                td
+                  .inner-list
+                    each item in orderDetail.items
+                      .inner-item
+                        .inner-image
+                          img(src=item.avatar, alt="")
+                        .inner-info
+                          .inner-name #{item.name}
+                          .inner-quantity
+                            div Adults: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                            div Children: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                            div Babies: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
+                td
+                  div Estimated: #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
+                  div Discount: #{orderDetail.discount.toLocaleString("vi-VN")}đ
+                  div Total: #{orderDetail.total.toLocaleString("vi-VN")}đ
+                  div Payment Method: #{orderDetail.paymentMethodName}
+                  div Payment Status: #{orderDetail.paymentStatusName}
+                td
+                  div(class=`badge badge-${orderDetail.statusInfo.color}`) #{orderDetail.statusInfo.label}
+                td.inner-center
+                  div #{orderDetail.createdAtTime}
+                  div #{orderDetail.createdAtDate}
+                td.inner-center
+                  div.inner-time #{orderDetail.deletedAtFormat}
+                td
+                  .inner-buttons
+                    button(
+                      class="inner-undo"
+                      button-undo
+                      data-api=`/${pathAdmin}/order/undo/${orderDetail.id}`
+                      )
+                      <i class="fa-solid fa-rotate-left"></i>
+                    button(
+                      class="inner-delete"
+                      button-destroy
+                      data-api=`/${pathAdmin}/order/destroy/${orderDetail.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="9" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No orders found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

@@ -1,0 +1,15 @@
+mixin section-5(link="")
+  .section-5
+    .container
+      .inner-image(
+        data-aos-duration="800" 
+        data-aos="fade-up"
+        )
+        if link
+          a(href="#")
+            img(
+              alt="" 
+              src=link
+              )
+        else
+          div.no-data No data.

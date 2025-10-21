@@ -1,0 +1,60 @@
+extends ../layouts/default.pug
+
+block main
+  if (permissions.includes("user-view"))
+    h1.box-title Client Management
+
+    //- Section 4
+    .section-4
+      .inner-wrap
+        .inner-item
+          <i class="fa-solid fa-filter"></i> Filter
+        .inner-item
+          input(type="date" filter-start-date min="2000-01-01" max="2099-12-31")
+          span -
+          input(type="date" filter-end-date min="2000-01-01" max="2099-12-31")
+        .inner-item.inner-reset(filter-reset)
+          <i class="fa-solid fa-rotate-left"></i> Reset Filter
+    //- End Section 4
+
+    //- Section 5
+    .section-5
+      .inner-wrap
+        .inner-search
+          <i class="fa-solid fa-magnifying-glass"></i>
+          input(type="text" placeholder="Search by name, phone, email" search)
+    //- End Section 5
+
+    //- Section 6
+    .section-6
+      .table-2
+        table
+          thead
+            tr
+              th Customer Name
+              th Phone
+              th Email
+              th(class="inner-center") Total Orders
+              th Total Spent
+              th Last Order Date
+          tbody
+            if customerList && customerList.length > 0
+              each customer in customerList
+                tr
+                  td #{customer.fullName}
+                  td #{customer.phone}
+                  td #{customer.email || "N/A"}
+                  td(class="inner-center") #{customer.totalOrders}
+                  td #{customer.totalSpent.toLocaleString("vi-VN")}đ
+                  td
+                    div.inner-time #{customer.lastOrderDateFormat}
+            else
+              tr
+                td(colspan="6" style="text-align: center; padding: 20px;") No customers found.
+    //- End Section 6
+
+    //- Section 7
+    include ../partials/pagination.pug
+    //- End Section 7
+  else
+    h1.box-title No permissions.

@@ -1,0 +1,124 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Order Management
+
+  //- Section 4
+  .section-4
+    .inner-wrap
+      .inner-item
+        <i class="fa-solid fa-filter"></i> Filter
+      .inner-item
+        select(filter-status)
+          option(value="") Status
+          option(value="initial") Initial
+          option(value="confirmed") Confirmed
+          option(value="canceled") Canceled
+          option(value="completed") Completed
+      .inner-item
+        input(type="date" filter-start-date min="2000-01-01" max="2099-12-31")
+        span -
+        input(type="date" filter-end-date min="2000-01-01" max="2099-12-31")
+      .inner-item
+        select(filter-payment-method)
+          option(value="") Payment Method
+          option(value="cash") Cash
+          option(value="zalopay") ZaloPay
+          option(value="vnpay") VNPay
+          option(value="bank-transfer") Bank Transfer
+      .inner-item
+        select(filter-payment-status)
+          option(value="") Payment Status
+          option(value="unpaid") Unpaid
+          option(value="paid") Paid
+      .inner-item.inner-reset(filter-reset)
+        <i class="fa-solid fa-rotate-left"></i> Reset Filter
+  //- End Section 4
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/order/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="delete") Delete
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+      .inner-button-trash
+        a(href=`/${pathAdmin}/order/trash`) Trash
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Code
+            th Customer Infomation
+            th Tour List
+            th Payment
+            th Status
+            th.inner-center Order Date
+            th Action
+        tbody
+          if orderList.length > 0
+            each orderDetail in orderList
+              tr
+                td
+                  input(type="checkbox" check-item=orderDetail.id)
+                td
+                  .inner-code #{orderDetail.code}
+                td
+                  div Full : #{orderDetail.fullName}
+                  div Phone Number: #{orderDetail.phone}
+                  div Note: #{orderDetail.note}
+                td
+                  .inner-list
+                    each item in orderDetail.items
+                      .inner-item
+                        .inner-image
+                          img(src=item.avatar, alt="")
+                        .inner-info
+                          .inner-name #{item.name}
+                          .inner-quantity
+                            div Adults: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                            div Children: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                            div Babies: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
+                td
+                  div Estimated: #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
+                  div Discount: #{orderDetail.discount.toLocaleString("vi-VN")}đ
+                  div Total: #{orderDetail.total.toLocaleString("vi-VN")}đ
+                  div Payment Method: #{orderDetail.paymentMethodName}
+                  div Payment Status: #{orderDetail.paymentStatusName}
+                td
+                  div(class=`badge badge-${orderDetail.statusInfo.color}`) #{orderDetail.statusInfo.label}
+                td.inner-center
+                  div #{orderDetail.createdAtTime}
+                  div #{orderDetail.createdAtDate}
+                td
+                  .inner-buttons
+                    a(href=`/${pathAdmin}/order/edit/${orderDetail.id}` class="inner-edit")
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    button(
+                      class="inner-delete"
+                      button-delete
+                      data-api=`/${pathAdmin}/order/delete/${orderDetail.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="8" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No orders found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

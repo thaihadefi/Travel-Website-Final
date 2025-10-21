@@ -1,0 +1,154 @@
+extends ../layouts/default.pug
+include ../mixins/options.pug
+
+block main
+  
+  h1.box-title Edit tour
+
+  //- Section 8
+  .section-8
+    form(id="tour-edit-form")
+      .inner-group(style="display: none;")
+        label(for="id" class="inner-label") ID
+        input(type="text" id="id" name="id" value=tourDetail.id)
+      .inner-group
+        label(for="name" class="inner-label") Tour Name
+        input(type="text" id="name" name="name" value=tourDetail.name)
+      .inner-group
+        label(for="category" class="inner-label") Category
+        select(id="category" name="category")
+          option(value="") -- Select Category -- 
+          +options(categoryList, 0, tourDetail.category)
+      .inner-group
+        label(for="position" class="inner-label") Position
+        input(type="number" id="position" name="position" value=tourDetail.position)
+      .inner-group
+        label(for="status" class="inner-label") Status
+        select(id="status" name="status")
+          option(
+            value="active" 
+            selected=(tourDetail.status == "active" ? true : false)
+            ) Active
+          option(
+            value="inactive" 
+            selected=(tourDetail.status == "inactive" ? true : false)
+            ) Inactive
+      .inner-group.inner-two-col
+        label(for="avatar" class="inner-label") Avatar
+        .inner-upload-image(image-default=tourDetail.avatar)
+          input(
+            type="file" 
+            id="avatar"
+            name="avatar"
+            filepond-image
+            )
+      .inner-group.inner-two-col
+        label(for="images" class="inner-label") Image list
+        .inner-upload-image-multi(list-image-default=tourDetail.images)
+          input(
+            type="file" 
+            id="images"
+            name="images"
+            filepond-image-multi
+            multiple
+            data-allow-reorder="true"
+            data-max-files="10"
+            )
+      .inner-group
+        label(class="inner-label") Old Price
+        .inner-input-list
+          .inner-input-item
+            label(for="priceAdult") Adults
+            input(type="number" id="priceAdult" name="priceAdult" value=tourDetail.priceAdult)
+          .inner-input-item
+            label(for="priceChildren") Children
+            input(type="number" id="priceChildren" name="priceChildren" value=tourDetail.priceChildren)
+          .inner-input-item
+            label(for="priceBaby") Babies
+            input(type="number" id="priceBaby" name="priceBaby" value=tourDetail.priceBaby)
+      .inner-group
+        label(class="inner-label") New Price
+        .inner-input-list
+          .inner-input-item
+            label(for="priceNewAdult") Adults
+            input(type="number" id="priceNewAdult" name="priceNewAdult" value=tourDetail.priceNewAdult)
+          .inner-input-item
+            label(for="priceNewChildren") Children
+            input(type="number" id="priceNewChildren" name="priceNewChildren" value=tourDetail.priceNewChildren)
+          .inner-input-item
+            label(for="priceNewBaby") Babies
+            input(type="number" id="priceNewBaby" name="priceNewBaby" value=tourDetail.priceNewBaby)
+      .inner-group
+        label(class="inner-label") Remaining
+        .inner-input-list
+          .inner-input-item
+            label(for="stockAdult") Adults
+            input(type="number" id="stockAdult" name="stockAdult" value=tourDetail.stockAdult)
+          .inner-input-item
+            label(for="stockChildren") Children
+            input(type="number" id="stockChildren" name="stockChildren" value=tourDetail.stockChildren)
+          .inner-input-item
+            label(for="stockBaby") Babies
+            input(type="number" id="stockBaby" name="stockBaby" value=tourDetail.stockBaby)
+      .inner-group
+        label(class="inner-label") Departure From
+        .inner-checkbox-list
+          each item in cityList
+            .inner-checkbox-item
+              input(
+                type="checkbox" 
+                id=`location-${item.id}`
+                name="locations" 
+                value=item.id
+                checked=(tourDetail.locations.includes(item.id))
+                )
+              label(
+                for=`location-${item.id}`
+                ) #{item.name}
+      .inner-group
+        label(for="time" class="inner-label") Duration
+        input(type="text" id="time" name="time" value=tourDetail.time)
+      .inner-group
+        label(for="vehicle" class="inner-label") Vehicle
+        input(type="text" id="vehicle" name="vehicle" value=tourDetail.vehicle)
+      .inner-group
+        label(for="departureDate" class="inner-label") Departure Date
+        input(type="date" id="departureDate" name="departureDate" value=tourDetail.departureDateFormat)
+      .inner-group.inner-two-col
+        label(for="information" class="inner-label") Tour Information
+        textarea(id="information" textarea-mce name="information") #{tourDetail.information}
+      .inner-group.inner-two-col
+        label(class="inner-label") Tour Schedule
+        .inner-schedule
+          .inner-schedule-list
+            if (tourDetail.schedules.length > 0)
+              each item in tourDetail.schedules
+                .inner-schedule-item
+                  .inner-schedule-head
+                    span(class="inner-schedule-button inner-move")
+                      <i class="fa-solid fa-up-down-left-right"></i>
+                    input(type="text" value=item.title)
+                    span(class="inner-schedule-button inner-remove")
+                      <i class="fa-regular fa-trash-can"></i>
+                    span(class="inner-schedule-button inner-more")
+                      <i class="fa-solid fa-angle-down"></i>
+                  .inner-schedule-body
+                    textarea(textarea-mce) #{item.description}
+            else
+              .inner-schedule-item
+                .inner-schedule-head
+                  span(class="inner-schedule-button inner-move")
+                    <i class="fa-solid fa-up-down-left-right"></i>
+                  input(type="text")
+                  span(class="inner-schedule-button inner-remove")
+                    <i class="fa-regular fa-trash-can"></i>
+                  span(class="inner-schedule-button inner-more")
+                    <i class="fa-solid fa-angle-down"></i>
+                .inner-schedule-body
+                  textarea(textarea-mce)
+          .inner-schedule-create + Add Schedule
+      .inner-button.inner-two-col
+        button Update
+    .inner-back
+      a(href=`/${pathAdmin}/tour/list`) Back to List
+  //- End Section 8

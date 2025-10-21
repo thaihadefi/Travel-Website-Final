@@ -1,0 +1,9 @@
+if pagination && pagination.totalRecord > 0
+  .pagination
+    span.inner-label
+      | Show #{pagination.skip + 1}
+      | - #{pagination.skip + pagination.currentCount}
+      | of #{pagination.totalRecord}
+    select(class="inner-pagination" box-pagination)
+      - for (let i = 1; i <= pagination.totalPage; i++)
+        option(value=i selected=(i == pagination.currentPage)) Page #{i}

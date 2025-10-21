@@ -1,0 +1,64 @@
+footer.footer
+  .container
+    .inner-top
+      .inner-title Sign up now to get our hot deals
+      form#email-form.inner-form(action="")
+        input#email-input(
+          placeholder="Enter your email..."
+          name="email" 
+          type="email"
+          )
+        button Sign Up Now
+    .inner-middle
+      nav.inner-links
+        ul
+          li
+            a(href="/") Home
+          li
+            a(href="/category/domestic-tours") Domestic Tours
+          li
+            a(href="/category/foreign-tours") Foreign Tours
+          li
+            a(href="/contact") Contact
+          li 
+            a(href="/track") Track Orders
+      nav.inner-socials
+        ul
+          li
+            a(
+              target="_blank" 
+              href="https://www.facebook.com/"
+              )
+              i.fa-brands.fa-facebook
+          li
+            a(
+              target="_blank" 
+              href="https://x.com"
+              )
+              i.fa-brands.fa-x-twitter
+          li
+            a(
+              target="_blank" 
+              href="https://www.instagram.com/"
+              )
+              i.fa-brands.fa-instagram
+          li
+            a(
+              target="_blank" 
+              href="https://www.youtube.com/"
+              )
+              i.fa-brands.fa-youtube
+    .inner-bottom
+      .inner-copyright © 2025 UIT-UA Travel. All rights reserved.
+      .inner-logo
+        a(href="/")
+          img(
+            alt=settingWebsiteInfo ? settingWebsiteInfo.websiteName : 'Travel Website'
+            src=settingWebsiteInfo && settingWebsiteInfo.logo ? settingWebsiteInfo.logo : '/assets/images/logo.png'
+            )
+      nav.inner-links
+        ul
+          li
+            a(target="_blank" href="https://policies.google.com/terms?hl=en-US") Terms of Service
+          li
+            a(target="_blank" href="https://policies.google.com/privacy?hl=en-US") Privacy Policy

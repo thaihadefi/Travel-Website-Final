@@ -1,0 +1,27 @@
+.sider-overlay
+nav.sider  
+  ul.inner-menu
+    if (permissions.includes("dashboard-view"))
+      li
+        a(href=`/${pathAdmin}/dashboard`) <i class="fa-solid fa-gauge-high"></i> Dashboard
+    if (permissions.includes("category-view"))
+      li
+        a(href=`/${pathAdmin}/category/list`) <i class="fa-solid fa-table-cells-large"></i> Category Management
+    if (permissions.includes("tour-view"))
+      li
+        a(href=`/${pathAdmin}/tour/list`) <i class="fa-solid fa-table-list"></i> Tour Management
+    li
+      a(href=`/${pathAdmin}/order/list`) <i class="fa-solid fa-list-check"></i> Order Management
+    if (permissions.includes("user-view"))
+      li
+        a(href=`/${pathAdmin}/user/list`) <i class="fa-solid fa-users"></i> Client Management
+    li
+      a(href=`/${pathAdmin}/contact/list`) <i class="fa-solid fa-user-group"></i> Contact Information
+  hr
+  ul.inner-menu
+    li
+      a(href=`/${pathAdmin}/setting/list`) <i class="fa-solid fa-gear"></i> Settings
+    li
+      a(href=`/${pathAdmin}/profile/edit`) <i class="fa-solid fa-user-gear"></i> Profile
+    li
+      a(href="javascript:;" class="inner-logout") <i class="fa-solid fa-power-off"></i> Logout

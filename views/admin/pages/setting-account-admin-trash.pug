@@ -1,0 +1,85 @@
+extends ../layouts/default.pug
+
+block main
+  
+  h1.box-title Admin Account Trash
+
+  //- Section 5
+  .section-5
+    .inner-wrap
+      .inner-change-status(change-multi data-api=`/${pathAdmin}/setting/account-admin/change-multi`)
+        .inner-item
+          select
+            option(value="") -- Action --
+            option(value="undo") Restore
+            option(value="destroy") Delete Permanently
+        .inner-item
+          button(type="button") Apply
+      .inner-search
+        <i class="fa-solid fa-magnifying-glass"></i>
+        input(type="text" placeholder="Search" search)
+  //- End Section 5
+
+  //- Section 6
+  .section-6
+    .table-2
+      table
+        thead
+          tr
+            th
+              input(type="checkbox" check-all)
+            th Full Name
+            th(class="inner-center") Avatar
+            th Email
+            th Phone Number
+            th Role
+            th Position
+            th Status
+            th Deleted By
+            th Action
+        tbody
+          if accountAdminList.length > 0
+            each item in accountAdminList
+              tr
+                td
+                  input(type="checkbox" check-item=item.id)
+                td #{item.fullName}
+                td(class="inner-center")
+                  img(src=item.avatar class="inner-avatar")
+                td #{item.email}
+                td #{item.phone}
+                td #{item.roleName}
+                td #{item.positionCompany}
+                td
+                  if (item.status == "initial")
+                    .badge.badge-orange Initial
+                  else if (item.status == "active")
+                    .badge.badge-green Active
+                  else if (item.status == "inactive")
+                    .badge.badge-red Inactive
+                td
+                  div #{item.deletedByFullName}
+                  div.inner-time #{item.deletedAtFormat}
+                td
+                  .inner-buttons
+                    button(
+                      class="inner-undo"
+                      button-undo
+                      data-api=`/${pathAdmin}/setting/account-admin/undo/${item.id}`
+                      )
+                      <i class="fa-solid fa-rotate-left"></i>
+                    button(
+                      class="inner-delete"
+                      button-destroy
+                      data-api=`/${pathAdmin}/setting/account-admin/destroy/${item.id}`
+                      )
+                      <i class="fa-regular fa-trash-can"></i>
+          else
+            tr
+              td(colspan="10" style="text-align: center; padding: 40px 20px; color: #999;")
+                | No accounts found.
+  //- End Section 6
+
+  //- Section 7
+  include ../partials/pagination.pug
+  //- End Section 7

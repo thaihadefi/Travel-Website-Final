@@ -1,0 +1,54 @@
+extends ../layouts/account.pug
+
+block main
+  .form-account
+    h1.inner-title Login
+    .inner-desc Please enter your email and password to continue
+
+    form.inner-form(id="login-form")
+      .inner-group
+        label(
+          for="email"
+          class="inner-label"
+        ) Email
+        input(
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Example: levana@gmail.com"
+          class="inner-control"
+        )
+      .inner-group
+        label(
+          for="password"
+          class="inner-label"
+        ) Password
+        input(
+          type="password"
+          name="password"
+          id="password"
+          class="inner-control"
+        )
+        span(class="inner-toggle-password" toggle-password)
+          i(class="fa-solid fa-eye")
+      .inner-meta
+        .inner-confirm
+          input(
+            type="checkbox"
+            name="rememberPassword"
+            id="remember-password"
+            class="inner-check"
+          )
+          label(
+            for="remember-password"
+            class="inner-label"
+          ) Remember Password
+        a(
+          href=`/${pathAdmin}/account/forgot-password`
+          class="inner-button-link"
+        ) Forgot Password?
+      button(class="inner-button") Login
+
+    .inner-more
+      span Do you remember your password?
+      a(href=`/${pathAdmin}/account/register`) Create an account

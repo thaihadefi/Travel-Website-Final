@@ -1,0 +1,76 @@
+extends ../layouts/default.pug
+
+block main
+  .container
+    .section-11(style="padding-top: 20px;")
+      .inner-wrap
+        h4(style="color: green;") Thank you for booking the tour! We will contact you as soon as possible.
+        .inner-head
+          .inner-title Order Information
+        p Order Code: #{orderDetail.code}
+        p Customer Name: #{orderDetail.fullName}
+        p Phone Number: #{orderDetail.phone}
+        p Note: #{orderDetail.test}
+        p Payment Method: #{orderDetail.paymentMethodName}
+        p Payment Status: #{orderDetail.paymentStatusName}
+        p Order Status: #{orderDetail.statusName}
+        p Created At: #{orderDetail.createdAtFormat}
+
+    .section-11(style="padding-top: 20px;")
+      .inner-wrap
+        .inner-head
+          .inner-title Tour List
+        .inner-tour-list
+          each item in orderDetail.items
+            // Tour Item
+            .inner-tour-item
+              .inner-actions
+              .inner-product
+                .inner-image
+                  a(href=`/tour/detail/${item.slug}`)
+                    img(
+                      alt=item.name
+                      src=item.avatar
+                      )
+                .inner-content
+                  .inner-title
+                    a(href=`/tour/detail/${item.slug}`) #{item.name}
+                  .inner-meta
+                    .inner-meta-item
+                      | Departure Date: 
+                      b #{item.departureDateFormat}
+                    .inner-meta-item
+                      | Departure: 
+                      b #{item.cityName}
+              .inner-quantity
+                label.inner-label Number of Passengers
+                .inner-list
+                  .inner-item
+                    .inner-item-label Adults:
+                    .inner-item-price
+                      span #{item.quantityAdult}
+                      span x
+                      span.inner-hl #{item.priceNewAdult.toLocaleString("vi-VN")}
+                  .inner-item
+                    .inner-item-label Children:
+                    .inner-item-price
+                      span #{item.quantityChildren}
+                      span x
+                      span.inner-hl #{item.priceNewChildren.toLocaleString("vi-VN")}
+                  .inner-item
+                    .inner-item-label Babies:
+                    .inner-item-price
+                      span #{item.quantityBaby}
+                      span x
+                      span.inner-hl #{item.priceNewBaby.toLocaleString("vi-VN")}
+            // End Tour Item
+        .inner-list-price
+          .inner-item
+            .inner-label Estimated:
+            .inner-price #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
+          .inner-item
+            .inner-label Discount:
+            .inner-price -#{orderDetail.discount.toLocaleString("vi-VN")}đ
+          .inner-item
+            .inner-label Total:
+            .inner-price-hl #{orderDetail.total.toLocaleString("vi-VN")}đ

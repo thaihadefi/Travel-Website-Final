@@ -1,0 +1,16 @@
+mixin change-status(api, options)
+  - 
+    const optionList = options || [
+      { label: "Active", value: "active" },
+      { label: "Inactive", value: "inactive" },
+      { label: "Delete", value: "delete" },
+    ];
+
+  .inner-change-status(change-multi data-api=api)
+    .inner-item
+      select
+        option(value="") -- Action --
+        each item in optionList
+          option(value=item.value)= item.label
+    .inner-item
+      button(type="button") Apply

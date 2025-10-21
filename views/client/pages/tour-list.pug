@@ -1,0 +1,31 @@
+extends ../layouts/default.pug
+include ../mixins/box-breadcrumb.pug
+include ../mixins/product.pug
+
+block main
+  +box-breadcrumb(breadcrumb)
+
+  .section-9
+    .container
+      .inner-wrap
+        .inner-left
+          include ../partials/box-filter.pug
+        .inner-right
+          .inner-info
+            h2.inner-title #{categoryDetail.name}
+            .inner-desc
+              | !{categoryDetail.description}
+          .inner-info-2
+            .inner-total-item
+              | Total: 
+              b #{pagination ? pagination.totalRecord : tourList.length} Tour
+          .inner-product-list
+            if (tourList.length > 0)
+              each item in tourList
+                +product-item(item)
+            else
+              div No records found.
+          // Pagination
+          if pagination
+            include ../partials/pagination.pug
+          // End Pagination

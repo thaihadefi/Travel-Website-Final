@@ -1,0 +1,94 @@
+extends ../layouts/default.pug
+
+block main
+  // Section 11
+  .section-11(page-cart)
+    .container
+      .inner-wrap
+        .inner-head
+          .inner-title Cart
+          a.inner-back(href="/")
+            | Back to Book
+            i.fa-solid.fa-angle-right
+        .inner-tour-list(cart-list)
+        .inner-list-price
+          .inner-item
+            .inner-label Estimated:
+            .inner-price
+              span(cart-sub-total) 0
+              span đ
+          .inner-item
+            .inner-label Discount:
+            .inner-price -0đ
+          .inner-item
+            .inner-label Total:
+            .inner-price-hl
+              span(cart-total) 0
+              span đ
+  // End Section 11
+  // Section 12
+  .section-12
+    .container
+      .inner-wrap
+        form#order-form(action="")
+          .inner-info
+            .inner-title-main Customer Information
+            .inner-list-group
+              .inner-group
+                input#fullname-input(
+                  placeholder="Full Name" 
+                  name="fullName" 
+                  type="text"
+                  )
+              .inner-group
+                input#phone-input(
+                  placeholder="Phone Number" 
+                  name="phone" 
+                  type="text"
+                  )
+              .inner-group.inner-two-col
+                textarea(
+                  placeholder="Note" 
+                  name="note"
+                  )
+          .inner-method
+            .inner-title-main Choose Payment Method
+            .inner-list
+              .inner-item
+                input#methodMoney(
+                  checked="" 
+                  value="money" 
+                  name="method" 
+                  type="radio"
+                  )
+                label(for="methodMoney") Cash
+              .inner-item
+                input#methodZaloPay(
+                  value="zalopay" 
+                  name="method" 
+                  type="radio"
+                  )
+                label(for="methodZaloPay") ZaloPay
+              .inner-item
+                input#methodVNPay(
+                  value="vnpay" 
+                  name="method" 
+                  type="radio"
+                  )
+                label(for="methodVNPay") VNPay
+              .inner-item
+                input#methodBank(
+                  value="bank" 
+                  name="method" 
+                  type="radio"
+                  )
+                label(for="methodBank") Bank Transfer
+            .inner-info-bank
+              .inner-title Bank Transfer Information
+              .inner-desc
+                div Bank: Vietcombank
+                div Account Name: Ha Vinh Thai
+                div Account Number: 9999999999
+          .inner-button
+            button BOOK TOUR
+  // End Section 12

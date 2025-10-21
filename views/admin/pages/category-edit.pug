@@ -1,0 +1,52 @@
+extends ../layouts/default.pug
+include ../mixins/options.pug
+
+block main
+  
+  h1.box-title Category Edit
+
+  //- Section 8
+  .section-8
+    form(id="category-edit-form")
+      .inner-group(style="display: none;")
+        label(for="id" class="inner-label") ID
+        input(type="text" id="id" name="id" value=categoryDetail.id)
+      .inner-group
+        label(for="name" class="inner-label") Category Name
+        input(type="text" id="name" name="name" value=categoryDetail.name)
+      .inner-group
+        label(for="parent" class="inner-label") Parent Category
+        select(id="parent" name="parent")
+          option(value="") -- Select Category -- 
+          +options(categoryList, 0, categoryDetail.parent)
+      .inner-group
+        label(for="position" class="inner-label") Position
+        input(type="number" id="position" name="position" value=categoryDetail.position)
+      .inner-group
+        label(for="status" class="inner-label") Status
+        select(id="status" name="status")
+          option(
+            value="active" 
+            selected=(categoryDetail.status == "active" ? true : false)
+            ) Active
+          option(
+            value="inactive" 
+            selected=(categoryDetail.status == "inactive" ? true : false)
+            ) Inactive
+      .inner-group.inner-two-col
+        label(for="avatar" class="inner-label") Avatar
+        .inner-upload-image(image-default=categoryDetail.avatar)
+          input(
+            type="file" 
+            id="avatar"
+            name="avatar"
+            filepond-image
+            )
+      .inner-group.inner-two-col
+        label(for="description" class="inner-label") Description
+        textarea(id="description" textarea-mce name="description") #{categoryDetail.description}
+      .inner-button.inner-two-col
+        button Update
+    .inner-back
+      a(href=`/${pathAdmin}/category/list`) Back to list
+  //- End Section 8
