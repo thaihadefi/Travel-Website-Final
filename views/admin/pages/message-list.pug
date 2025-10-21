@@ -42,7 +42,11 @@ block main
           tr
             th
               input(type="checkbox" check-all)
+            th Full Name
             th Email
+            th Phone
+            th Subject
+            th Message
             th Created At
             th(class="inner-center") Action
         tbody
@@ -51,7 +55,11 @@ block main
               tr
                 td
                   input(type="checkbox" check-item=item.id)
+                td #{item.fullName}
                 td #{item.email}
+                td #{item.phone}
+                td #{item.subject}
+                td #{item.message}
                 td #{item.createdAtFormat}
                 td(class="inner-center")
                   .inner-buttons
@@ -63,7 +71,7 @@ block main
                       <i class="fa-regular fa-trash-can"></i>
           else
             tr
-              td(colspan="4" style="text-align: center; padding: 40px 20px; color: #999;")
+              td(colspan="8" style="text-align: center; padding: 40px 20px; color: #999;")
                 | No messages found.
   //- End Section 6
 

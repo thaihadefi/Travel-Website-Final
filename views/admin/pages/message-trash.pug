@@ -28,7 +28,11 @@ block main
           tr
             th
               input(type="checkbox" check-all)
+            th Full Name
             th Email
+            th Phone
+            th Subject
+            th Message
             th Created At
             th Deleted At
             th(class="inner-center") Action
@@ -38,7 +42,11 @@ block main
               tr
                 td
                   input(type="checkbox" check-item=item.id)
+                td #{item.fullName}
                 td #{item.email}
+                td #{item.phone}
+                td #{item.subject}
+                td #{item.message}
                 td #{item.createdAtFormat}
                 td #{item.deletedAtFormat}
                 td(class="inner-center")
@@ -57,7 +65,7 @@ block main
                       <i class="fa-regular fa-trash-can"></i>
           else
             tr
-              td(colspan="5" style="text-align: center; padding: 40px 20px; color: #999;")
+              td(colspan="9" style="text-align: center; padding: 40px 20px; color: #999;")
                 | No messages found.
   //- End Section 6
 
