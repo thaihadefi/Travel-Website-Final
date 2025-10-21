@@ -29,4 +29,11 @@ mixin product-item(item)
       .inner-meta
         .inner-stock
           .inner-label Available Seats:
-          .inner-number #{item.stockAdult}
+          - const totalSeats = (item.stockAdult || 0) + (item.stockChildren || 0) + (item.stockBaby || 0)
+          .inner-number #{totalSeats}
+          .inner-stock-breakdown
+            span A: #{item.stockAdult || 0}
+            |  
+            span C: #{item.stockChildren || 0}
+            |  
+            span B: #{item.stockBaby || 0}
