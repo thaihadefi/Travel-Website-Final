@@ -384,8 +384,7 @@ module.exports.paymentVNPayResult = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");     
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
-
+  let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
     if(secureHash === signed){
         // Check if data in db is valid and notify result
         const [orderCode, phone] = vnp_Params["vnp_TxnRef"].split("-");
