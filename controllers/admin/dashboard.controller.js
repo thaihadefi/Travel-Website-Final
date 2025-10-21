@@ -19,7 +19,10 @@ module.exports.dashboard = async (req, res) => {
     deleted: false
   })
   overview.totalOrder = orderList.length;
-  overview.totalRevenue = orderList.reduce((total, item) => total + item.total, 0);
+  
+  // Only count revenue from paid orders
+  const paidOrders = orderList.filter(order => order.paymentStatus === "paid");
+  overview.totalRevenue = paidOrders.reduce((total, item) => total + item.total, 0);
   // End Overview
 
   // Recent Orders
@@ -51,6 +54,7 @@ module.exports.revenueChartPost = async (req, res) => {
   const orderListCurrentMonth = await Order
     .find({
       deleted: false,
+      paymentStatus: "paid",
       createdAt: {
         $gte: new Date(currentYear, currentMonth - 1, 1),
         $lt: new Date(currentYear, currentMonth, 1),
@@ -61,6 +65,7 @@ module.exports.revenueChartPost = async (req, res) => {
   const orderListPrevMonth = await Order
     .find({
       deleted: false,
+      paymentStatus: "paid",
       createdAt: {
         $gte: new Date(prevYear, prevMonth - 1, 1),
         $lt: new Date(prevYear, prevMonth, 1),
