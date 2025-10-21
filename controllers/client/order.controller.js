@@ -49,11 +49,15 @@ module.exports.trackPost = async (req, res) => {
 
     for (const item of orderDetail.items) {
       item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
-      const city = await City.findOne({
-        _id: item.locationFrom
-      })
-      if(city) {
-        item.cityName = city.name;
+      
+      // Only query city if locationFrom exists and is not empty
+      if(item.locationFrom && item.locationFrom.trim() !== '') {
+        const city = await City.findOne({
+          _id: item.locationFrom
+        })
+        if(city) {
+          item.cityName = city.name;
+        }
       }
     }
 
@@ -62,6 +66,7 @@ module.exports.trackPost = async (req, res) => {
       orderDetail: orderDetail
     })
   } catch (error) {
+    console.log("[Track Order] Error:", error);
     res.json({
       code: "error",
       message: "Invalid data!"
@@ -143,12 +148,18 @@ module.exports.createPost = async (req, res) => {
 
 module.exports.success = async (req, res) => {
   try {
+    console.log("[Order Success] Query params:", req.query);
+    
     const { orderCode, phone } = req.query;
     
-    if(!orderCode && !phone) {
+    // Check if EITHER orderCode OR phone is missing (not both)
+    if(!orderCode || !phone) {
+      console.log("[Order Success] Missing orderCode or phone, redirecting to home");
       res.redirect("/");
       return;
     }
+
+    console.log("[Order Success] Looking for order:", orderCode, phone);
 
     const orderDetail = await Order.findOne({
       code: orderCode,
@@ -157,9 +168,12 @@ module.exports.success = async (req, res) => {
     })
 
     if(!orderDetail) {
+      console.log("[Order Success] Order not found, redirecting to home");
       res.redirect("/");
       return;
     }
+
+    console.log("[Order Success] Order found, rendering success page");
 
     orderDetail.paymentMethodName = paymentMethodList.find(item => item.value == orderDetail.paymentMethod).label;
     orderDetail.paymentStatusName = paymentStatusList.find(item => item.value == orderDetail.paymentStatus).label;
@@ -169,10 +183,16 @@ module.exports.success = async (req, res) => {
 
     for (const item of orderDetail.items) {
       item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
-      const city = await City.findOne({
-        _id: item.locationFrom
-      })
-      item.cityName = city.name;
+      
+      // Only query city if locationFrom exists and is not empty
+      if(item.locationFrom && item.locationFrom.trim() !== '') {
+        const city = await City.findOne({
+          _id: item.locationFrom
+        })
+        if(city) {
+          item.cityName = city.name;
+        }
+      }
     }
 
     res.render("client/pages/order-success", {
@@ -180,6 +200,7 @@ module.exports.success = async (req, res) => {
       orderDetail: orderDetail
     });
   } catch (error) {
+    console.log("[Order Success] Error:", error);
     res.redirect("/");
   }
 }
@@ -369,6 +390,8 @@ module.exports.paymentVNPay = async (req, res) => {
 
 module.exports.paymentVNPayResult = async (req, res) => {
   try {
+    console.log("[VNPay Result] Received callback with query:", req.query);
+    
     let vnp_Params = req.query;
 
     let secureHash = vnp_Params['vnp_SecureHash'];
@@ -386,27 +409,37 @@ module.exports.paymentVNPayResult = async (req, res) => {
     let hmac = crypto.createHmac("sha512", secretKey);
     let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
     
+    console.log("[VNPay Result] Signature match:", secureHash === signed);
+    
     if(secureHash === signed){
         // Parse vnp_TxnRef: format is "orderCode-phone-timestamp"
         const txnParts = vnp_Params["vnp_TxnRef"].split("-");
         const orderCode = txnParts[0];
         const phone = txnParts[1];
         
-        await Order.updateOne({
+        console.log("[VNPay Result] Parsed orderCode:", orderCode, "phone:", phone);
+        
+        const updateResult = await Order.updateOne({
           code: orderCode,
           phone: phone
         }, {
           paymentStatus: "paid"
         })
         
+        console.log("[VNPay Result] Update result:", updateResult);
+        
+        const redirectUrl = `/order/success?orderCode=${orderCode}&phone=${phone}`;
+        console.log("[VNPay Result] Redirecting to:", redirectUrl);
+        
         // Use relative path for redirect
-        res.redirect(`/order/success?orderCode=${orderCode}&phone=${phone}`);
+        res.redirect(redirectUrl);
     } else{
+        console.log("[VNPay Result] Signature mismatch - redirecting to home");
         // Signature mismatch - redirect to home
         res.redirect("/");
     }
   } catch (error) {
-    console.log(error);
+    console.log("[VNPay Result] Error:", error);
     res.redirect("/");
   }
 }

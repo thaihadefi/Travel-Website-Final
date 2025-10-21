@@ -82,9 +82,9 @@ module.exports.createPost = async (req, res, next) => {
       })
       .required()
       .messages({
-        "string.empty": "Please select at least one place that has tours!",
-        "any.required": "Please select at least one place that has tours!",
-        "locations.empty": "Please select at least one place that has tours!",
+        "string.empty": "Please select at least one departure!",
+        "any.required": "Please select at least one departure!",
+        "locations.empty": "Please select at least one departure!",
         "locations.invalid": "Places data is invalid!"
       }),
     time: Joi.string().max(255).required().messages({

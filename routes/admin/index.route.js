@@ -5,6 +5,7 @@ const categoryRoutes = require("./category.route");
 const tourRoutes = require("./tour.route");
 const orderRoutes = require("./order.route");
 const contactRoutes = require("./contact.route");
+const messageRoutes = require("./message.route");
 const settingRoutes = require("./setting.route");
 const profileRoutes = require("./profile.route");
 const uploadRoutes = require("./upload.route");
@@ -23,6 +24,7 @@ router.use('/category', authMiddleware.verifyToken, settingMiddleware.websiteInf
 router.use('/tour', authMiddleware.verifyToken, settingMiddleware.websiteInfo, tourRoutes)
 router.use('/order', authMiddleware.verifyToken, settingMiddleware.websiteInfo, orderRoutes)
 router.use('/contact', authMiddleware.verifyToken, settingMiddleware.websiteInfo, contactRoutes)
+router.use('/message', authMiddleware.verifyToken, settingMiddleware.websiteInfo, messageRoutes)
 router.use('/user', authMiddleware.verifyToken, settingMiddleware.websiteInfo, userRoutes)
 router.use('/setting', authMiddleware.verifyToken, settingMiddleware.websiteInfo, settingRoutes)
 router.use('/profile', authMiddleware.verifyToken, settingMiddleware.websiteInfo, profileRoutes)

@@ -36,3 +36,38 @@ module.exports.trackPost = (req, res, next) => {
 
   next();
 };
+
+module.exports.createPost = (req, res, next) => {
+  const schema = Joi.object({
+    fullName: Joi.string().min(3).required(),
+    phone: Joi.string().required(),
+    paymentMethod: Joi.string().required(),
+    items: Joi.array().items(
+      Joi.object({
+        tourId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+        locationFrom: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
+          'string.pattern.base': 'Please select a valid departure location for each tour.'
+        }),
+        quantityAdult: Joi.number().integer().min(0).required(),
+        quantityChildren: Joi.number().integer().min(0).required(),
+        quantityBaby: Joi.number().integer().min(0).required()
+      })
+    ).min(1).required()
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.reduce((acc, err) => {
+      acc[err.path.join('.')] = err.message;
+      return acc;
+    }, {});
+
+    res.json({
+      code: 'error',
+      errors: errors
+    });
+    return;
+  }
+
+  next();
+};

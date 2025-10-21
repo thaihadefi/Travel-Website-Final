@@ -58,8 +58,8 @@ module.exports.permissionList = [
     value: "category-view"
   },
   {
-    label: "Create Category",
-    value: "category-create"
+    label: "Contact Management",
+    value: "contact-view"
   },
   {
     label: "Edit Category",
@@ -96,6 +96,10 @@ module.exports.permissionList = [
   {
     label: "View Customers",
     value: "user-view"
+  },
+  {
+    label: "Message Management",
+    value: "message-view"
   },
 ];
 

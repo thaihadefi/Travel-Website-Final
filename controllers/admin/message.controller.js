@@ -1,4 +1,4 @@
-const Contact = require("../../models/contact.model");
+const ContactMessage = require("../../models/contact-message.model");
 const moment = require("moment");
 const { paginationLimit } = require("../../config/variable.config");
 
@@ -35,7 +35,7 @@ module.exports.list = async (req, res) => {
     page = parseInt(req.query.page);
   }
   const skip = (page - 1) * limitItems;
-  const totalRecord = await Contact.countDocuments(find);
+  const totalRecord = await ContactMessage.countDocuments(find);
   const totalPage = Math.ceil(totalRecord/limitItems);
   const pagination = {
     skip: skip,
@@ -44,7 +44,7 @@ module.exports.list = async (req, res) => {
   };
   // End Pagination
 
-  const contactList = await Contact
+  const messageList = await ContactMessage
     .find(find)
     .sort({
       createdAt: "desc"
@@ -52,17 +52,17 @@ module.exports.list = async (req, res) => {
     .limit(limitItems)
     .skip(skip)
 
-  for (const item of contactList) {
+  for (const item of messageList) {
     item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");
   }
 
   // Add current count and page to pagination
-  pagination.currentCount = contactList.length;
+  pagination.currentCount = messageList.length;
   pagination.currentPage = page;
 
-  res.render("admin/pages/contact-list", {
-    pageTitle: "Contact Management",
-    contactList: contactList,
+  res.render("admin/pages/message-list", {
+    pageTitle: "Message Management",
+    messageList: messageList,
     pagination: pagination
   });
 }
@@ -73,7 +73,7 @@ module.exports.changeMultiPatch = async (req, res) => {
 
     switch (value) {
       case "delete":
-        await Contact.updateMany({
+        await ContactMessage.updateMany({
           _id: { $in: ids }
         }, {
           deleted: true,
@@ -85,7 +85,7 @@ module.exports.changeMultiPatch = async (req, res) => {
         })
         break;
       case "undo":
-        await Contact.updateMany({
+        await ContactMessage.updateMany({
           _id: { $in: ids }
         }, {
           deleted: false
@@ -96,7 +96,7 @@ module.exports.changeMultiPatch = async (req, res) => {
         })
         break;
       case "destroy":
-        await Contact.deleteMany({
+        await ContactMessage.deleteMany({
           _id: { $in: ids }
         })
         res.json({
@@ -123,7 +123,7 @@ module.exports.deletePatch = async (req, res) => {
   try {
     const id = req.params.id;
 
-    await Contact.updateOne({
+    await ContactMessage.updateOne({
       _id: id
     }, {
       deleted: true,
@@ -132,7 +132,7 @@ module.exports.deletePatch = async (req, res) => {
     
     res.json({
       code: "success",
-      message: "Delete contact successfully!"
+      message: "Delete message successfully!"
     })
   } catch (error) {
     res.json({
@@ -154,7 +154,7 @@ module.exports.trash = async (req, res) => {
     page = parseInt(req.query.page);
   }
   const skip = (page - 1) * limitItems;
-  const totalRecord = await Contact.countDocuments(find);
+  const totalRecord = await ContactMessage.countDocuments(find);
   const totalPage = Math.ceil(totalRecord/limitItems);
   const pagination = {
     skip: skip,
@@ -163,7 +163,7 @@ module.exports.trash = async (req, res) => {
   };
   // End Pagination
 
-  const contactList = await Contact
+  const messageList = await ContactMessage
     .find(find)
     .sort({
       deletedAt: "desc"
@@ -171,18 +171,18 @@ module.exports.trash = async (req, res) => {
     .limit(limitItems)
     .skip(skip)
 
-  for (const item of contactList) {
+  for (const item of messageList) {
     item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");
     item.deletedAtFormat = moment(item.deletedAt).format("HH:mm - DD/MM/YYYY");
   }
 
   // Add current count and page to pagination
-  pagination.currentCount = contactList.length;
+  pagination.currentCount = messageList.length;
   pagination.currentPage = page;
 
-  res.render("admin/pages/contact-trash", {
-    pageTitle: "Contact Trash",
-    contactList: contactList,
+  res.render("admin/pages/message-trash", {
+    pageTitle: "Message Trash",
+    messageList: messageList,
     pagination: pagination
   });
 }
@@ -191,7 +191,7 @@ module.exports.undoPatch = async (req, res) => {
   try {
     const id = req.params.id;
 
-    await Contact.updateOne({
+    await ContactMessage.updateOne({
       _id: id
     }, {
       deleted: false
@@ -213,7 +213,7 @@ module.exports.destroyDelete = async (req, res) => {
   try {
     const id = req.params.id;
 
-    await Contact.deleteOne({
+    await ContactMessage.deleteOne({
       _id: id
     });
     

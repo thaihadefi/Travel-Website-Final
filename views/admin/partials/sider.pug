@@ -15,8 +15,12 @@ nav.sider
     if (permissions.includes("user-view"))
       li
         a(href=`/${pathAdmin}/user/list`) <i class="fa-solid fa-users"></i> Client Management
-    li
-      a(href=`/${pathAdmin}/contact/list`) <i class="fa-solid fa-user-group"></i> Contact Information
+    if (permissions.includes("contact-view"))
+      li
+        a(href=`/${pathAdmin}/contact/list`) <i class="fa-solid fa-user-group"></i> Contact Management
+    if (permissions.includes("message-view"))
+      li
+        a(href=`/${pathAdmin}/message/list`) <i class="fa-solid fa-envelope-open-text"></i> Message Management
   hr
   ul.inner-menu
     li

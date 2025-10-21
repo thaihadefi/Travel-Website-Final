@@ -6,7 +6,7 @@ router.get('/track', orderController.track)
 
 router.post('/track', orderValidate.trackPost, orderController.trackPost)
 
-router.post('/create', orderController.createPost)
+router.post('/create', orderValidate.createPost, orderController.createPost)
 
 router.get('/success', orderController.success)
 
