@@ -895,6 +895,18 @@ input, select, textarea, button {
   color: #FFFFFF;
 }
 
+.product-item .inner-content .inner-stock-summary {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b6b6b;
+  /* ensure it occupies a full line under the inline-flex .inner-stock */
+  flex-basis: 100%;
+  align-self: flex-start;
+}
+
+
+
 @media (max-width: 575.98px) {
   .product-item .inner-content .inner-stock {
     display: flex;

@@ -19,21 +19,9 @@ mixin product-item(item)
         .inner-price-new
           | #{item.priceNewAdult.toLocaleString("vi-VN")}
           span.inner-unit đ
-      .inner-desc
-        .inner-desc-item
-          | Departure Date: 
-          b #{item.departureDateFormat}
-        .inner-desc-item
-          | Duration: 
-          b #{item.time}
       .inner-meta
         .inner-stock
           .inner-label Available Seats:
           - const totalSeats = (item.stockAdult || 0) + (item.stockChildren || 0) + (item.stockBaby || 0)
           .inner-number #{totalSeats}
-          .inner-stock-breakdown
-            span A: #{item.stockAdult || 0}
-            |  
-            span C: #{item.stockChildren || 0}
-            |  
-            span B: #{item.stockBaby || 0}
+        .inner-stock-summary Adults: #{item.stockAdult || 0}, Children: #{item.stockChildren || 0}, Babies: #{item.stockBaby || 0}
