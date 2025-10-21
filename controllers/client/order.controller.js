@@ -212,9 +212,8 @@ module.exports.paymentZaloPay = async (req, res) => {
       endpoint: `${process.env.ZALOPAY_DOMAIN}/v2/create`
     };
 
-    const baseUrl = process.env.WEBSITE_DOMAIN || `${req.protocol}://${req.get('host')}`;
     const embed_data = {
-      redirecturl: `${baseUrl}/order/success?orderCode=${orderCode}&phone=${phone}`
+      redirecturl: `${process.env.WEBSITE_DOMAIN}/order/success?orderCode=${orderCode}&phone=${phone}`
     };
 
     const items = [{}];
@@ -229,10 +228,8 @@ module.exports.paymentZaloPay = async (req, res) => {
       amount: orderDetail.total,
       description: `Order ${orderCode}`,
       bank_code: "",
-      callback_url: `${baseUrl}/order/payment-zalopay-result`
+      callback_url: `${process.env.WEBSITE_DOMAIN}/order/payment-zalopay-result`
     };
-
-    console.log('ZaloPay payment init:', { orderCode, phone, redirecturl: embed_data.redirecturl, callback_url: order.callback_url });
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
     const data = config.app_id + "|" + order.app_trans_id + "|" + order.app_user + "|" + order.amount + "|" + order.app_time + "|" + order.embed_data + "|" + order.item;
@@ -261,20 +258,14 @@ module.exports.paymentZaloPayResultPost = async (req, res) => {
   let result = {};
 
   try {
-    console.log('=== ZaloPay callback received ===');
-    console.log('Body:', req.body);
-    
     let dataStr = req.body.data;
     let reqMac = req.body.mac;
 
     let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
 
-    console.log('Signature check:', { received: reqMac, calculated: mac, match: reqMac === mac });
-
     // Check valid callback (from ZaloPay server)
     if (reqMac !== mac) {
       // Invalid callback
-      console.log('ZaloPay signature mismatch');
       result.return_code = -1;
       result.return_message = "mac not equal";
     }
@@ -282,27 +273,20 @@ module.exports.paymentZaloPayResultPost = async (req, res) => {
       // Payment successful
       // merchant updates order status to paid
       let dataJson = JSON.parse(dataStr, config.key2);
-      console.log('ZaloPay data:', dataJson);
 
-      // Update order status to paid - parse app_user correctly (orderCode-phone format)
-      const parts = dataJson.app_user.split("-");
-      const orderCode = parts[0];
-      const phone = parts[1];
-      console.log('Parsed:', { orderCode, phone });
-      
-      const updateResult = await Order.updateOne({
+      // Update order status to paid
+      const [orderCode, phone] = dataJson.app_user.split("-");
+      await Order.updateOne({
         code: orderCode,
         phone: phone
       }, {
         paymentStatus: "paid"
       })
-      console.log('Order update result:', updateResult);
 
       result.return_code = 1;
       result.return_message = "success";
     }
   } catch (ex) {
-    console.log('ZaloPay error:', ex);
     result.return_code = 0; // ZaloPay server will callback (up to 3 times)
     result.return_message = ex.message;
   }
@@ -342,13 +326,10 @@ module.exports.paymentVNPay = async (req, res) => {
     let tmnCode = process.env.VNPAY_TMNCODE;
     let secretKey = process.env.VNPAY_SECRET;
     let vnpUrl = process.env.VNPAY_URL;
-    const baseUrl = process.env.WEBSITE_DOMAIN || `${req.protocol}://${req.get('host')}`;
-    let returnUrl = `${baseUrl}/order/payment-vnpay-result`;
+    let returnUrl = `${process.env.WEBSITE_DOMAIN}/order/payment-vnpay-result`;
     let orderId = `${orderCode}-${phone}-${Date.now()}`;
     let amount = orderDetail.total;
     let bankCode = "";
-    
-    console.log('VNPay payment init:', { orderCode, phone, returnUrl, amount });
     
     let locale = "vn";
     let currCode = 'VND';
@@ -388,9 +369,6 @@ module.exports.paymentVNPay = async (req, res) => {
 
 module.exports.paymentVNPayResult = async (req, res) => {
   try {
-    console.log('=== VNPay callback received ===');
-    console.log('Query params:', req.query);
-    
     let vnp_Params = req.query;
 
     let secureHash = vnp_Params['vnp_SecureHash'];
@@ -406,40 +384,22 @@ module.exports.paymentVNPayResult = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");     
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
-    
-    console.log('Signature check:', { received: secureHash, calculated: signed, match: secureHash === signed });
-    
+  let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
     if(secureHash === signed){
         // Check if data in db is valid and notify result
-        const txnRef = vnp_Params["vnp_TxnRef"];
-        console.log('vnp_TxnRef:', txnRef);
-        
-        // Parse orderCode-phone-timestamp format
-        const parts = txnRef.split("-");
-        const orderCode = parts[0];
-        const phone = parts[1];
-        console.log('Parsed:', { orderCode, phone });
-        
-        const updateResult = await Order.updateOne({
+        const [orderCode, phone] = vnp_Params["vnp_TxnRef"].split("-");
+        await Order.updateOne({
           code: orderCode,
           phone: phone
         }, {
           paymentStatus: "paid"
         })
-        console.log('Order update result:', updateResult);
-        
-        // Use fallback URL if WEBSITE_DOMAIN not set
-        const baseUrl = process.env.WEBSITE_DOMAIN || `${req.protocol}://${req.get('host')}`;
-        const redirectUrl = `${baseUrl}/order/success?orderCode=${orderCode}&phone=${phone}`;
-        console.log('Redirecting to:', redirectUrl);
-        res.redirect(redirectUrl);
+        res.redirect(`${process.env.WEBSITE_DOMAIN}/order/success?orderCode=${orderCode}&phone=${phone}`);
     } else{
-        console.log('Signature mismatch - redirecting to home');
-        res.redirect("/");
+        res.render('success', {code: '97'})
     }
   } catch (error) {
-    console.log('VNPay error:', error);
+    console.log(error);
     res.redirect("/");
   }
 }
