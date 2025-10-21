@@ -356,7 +356,7 @@ module.exports.paymentVNPay = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
+    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex"); 
     vnp_Params['vnp_SecureHash'] = signed;
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
@@ -384,20 +384,26 @@ module.exports.paymentVNPayResult = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");     
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
-
+    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
+    
     if(secureHash === signed){
-        // Check if data in db is valid and notify result
-        const [orderCode, phone] = vnp_Params["vnp_TxnRef"].split("-");
+        // Parse vnp_TxnRef: format is "orderCode-phone-timestamp"
+        const txnParts = vnp_Params["vnp_TxnRef"].split("-");
+        const orderCode = txnParts[0];
+        const phone = txnParts[1];
+        
         await Order.updateOne({
           code: orderCode,
           phone: phone
         }, {
           paymentStatus: "paid"
         })
-        res.redirect(`${process.env.WEBSITE_DOMAIN}/order/success?orderCode=${orderCode}&phone=${phone}`);
+        
+        // Use relative path for redirect
+        res.redirect(`/order/success?orderCode=${orderCode}&phone=${phone}`);
     } else{
-        res.render('success', {code: '97'})
+        // Signature mismatch - redirect to home
+        res.redirect("/");
     }
   } catch (error) {
     console.log(error);
