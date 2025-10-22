@@ -22,6 +22,20 @@ input, select, textarea, button {
   outline: none;
 }
 
+/* Make readonly/unavailable inputs look like normal inputs (avoid browser default grayed-out style) */
+input.input-unavailable,
+textarea.input-unavailable,
+select.input-unavailable {
+  background-color: #FFFFFF; /* same as normal inputs */
+  color: #6b6b6b; /* slightly muted text to indicate readonly */
+  border: 1px solid #E6E6E6;
+  cursor: not-allowed;
+}
+
+input[readonly], textarea[readonly], select[readonly] {
+  background-color: #FFFFFF;
+}
+
 /* Container */
 .container {
   width: 1184px;
@@ -894,6 +908,17 @@ input, select, textarea, button {
   font-size: 14px;
   color: #FFFFFF;
 }
+
+.product-item .inner-content .inner-stock-summary {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b6b6b;
+  flex-basis: 100%;
+  align-self: flex-start;
+}
+
+
 
 @media (max-width: 575.98px) {
   .product-item .inner-content .inner-stock {

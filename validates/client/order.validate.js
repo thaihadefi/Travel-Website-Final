@@ -40,8 +40,10 @@ module.exports.trackPost = (req, res, next) => {
 module.exports.createPost = (req, res, next) => {
   const schema = Joi.object({
     fullName: Joi.string().min(3).required(),
-    phone: Joi.string().required(),
-    paymentMethod: Joi.string().required(),
+  phone: Joi.string().required(),
+  // Allow optional order note
+  note: Joi.string().allow('').optional(),
+  paymentMethod: Joi.string().required(),
     items: Joi.array().items(
       Joi.object({
         tourId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
@@ -51,6 +53,12 @@ module.exports.createPost = (req, res, next) => {
         quantityAdult: Joi.number().integer().min(0).required(),
         quantityChildren: Joi.number().integer().min(0).required(),
         quantityBaby: Joi.number().integer().min(0).required()
+      }).custom((value, helpers) => {
+        const total = (value.quantityAdult || 0) + (value.quantityChildren || 0) + (value.quantityBaby || 0);
+        if (total <= 0) {
+          return helpers.message('Total passengers must be greater than 0');
+        }
+        return value;
       })
     ).min(1).required()
   });
@@ -62,8 +70,11 @@ module.exports.createPost = (req, res, next) => {
       return acc;
     }, {});
 
+    // Return message field for client compatibility
+    const firstError = error.details[0]?.message || 'Invalid data';
     res.json({
       code: 'error',
+      message: firstError,
       errors: errors
     });
     return;

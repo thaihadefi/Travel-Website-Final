@@ -23,46 +23,13 @@ if(buttonMenuMobile) {
     })
   })
 }
-// End Menu Mobile
-
-// Box Address Section 1
-const boxAddressSection1 = document.querySelector(".section-1 .inner-form .inner-address");
-if(boxAddressSection1) {
-  // Show/Hide box suggest
-  const input = boxAddressSection1.querySelector(".inner-input");
-  
-  input.addEventListener("focus", () => {
-    boxAddressSection1.classList.add("active");
-  })
-
-  input.addEventListener("blur", () => {
-    boxAddressSection1.classList.remove("active");
-  })
-
-  // Click on each item
-  const listItem = boxAddressSection1.querySelectorAll(".inner-suggest-list .inner-item");
-  listItem.forEach(item => {
-    item.addEventListener("mousedown", () => {
-      const title = item.querySelector(".inner-item-title").innerHTML.trim();
-      if(title) {
-        input.value = title;
-      }
-    })
-  })
-}
-// End Box Address Section 1
-
-// Box User Section 1
-const boxUserSection1 = document.querySelector(".section-1 .inner-form .inner-user");
-if(boxUserSection1) {
-  // Show box quantity
-  const input = boxUserSection1.querySelector(".inner-input");
-  
-  input.addEventListener("focus", () => {
-    boxUserSection1.classList.add("active");
-  })
 
   // Hide box quantity
+const boxUserSection1 = document.querySelector('.box-user-section-1');
+if (boxUserSection1) {
+  // input used to show summary like "A: x, C: y, B: z"
+  const input = boxUserSection1.querySelector('input');
+
   document.addEventListener("click", (event) => {
     if(!boxUserSection1.contains(event.target)) {
       boxUserSection1.classList.remove("active");
@@ -369,12 +336,32 @@ if(orderForm) {
       })
 
       if(cart.length > 0) {
+        // Ensure each selected item has totalPassengers > 0
+        const badItem = cart.find(item => {
+          const total = (item.quantityAdult || 0) + (item.quantityChildren || 0) + (item.quantityBaby || 0);
+          return item.checked == true && total <= 0;
+        });
+
+        if (badItem) {
+          notify.error('Total passengers must be greater than 0');
+          return;
+        }
+
+        // Strip client-only fields and send only server-expected properties
+        const cleanedItems = cart.map(item => ({
+          tourId: item.tourId,
+          locationFrom: item.locationFrom,
+          quantityAdult: item.quantityAdult,
+          quantityChildren: item.quantityChildren,
+          quantityBaby: item.quantityBaby
+        }));
+
         const dataFinal = {
           fullName: fullName,
           phone: phone,
           note: note,
           paymentMethod: paymentMethod,
-          items: cart
+          items: cleanedItems
         };
         
         fetch(`/order/create`, {
@@ -387,7 +374,8 @@ if(orderForm) {
           .then(res => res.json())
           .then(data => {
             if(data.code == "error") {
-              notify.error(data.message);
+              notify.error(data.message || data.errors || "Invalid data");
+              return;
             }
 
             if(data.code == "success") {
@@ -557,9 +545,41 @@ if(boxTourDetail) {
   const listInputQuantity = boxTourDetail.querySelectorAll("[input-quantity]");
   const elementTotalPrice = boxTourDetail.querySelector("[total-price]");
 
+    // Disable quantity inputs if max == 0 (unavailable)
+  listInputQuantity.forEach(input => {
+    // disable input if no stock
+    const max = parseInt(input.getAttribute('max')) || 0;
+    if (max === 0) {
+      // mark as unavailable but keep input editable=false to avoid browser grayed-out styling
+      input.readOnly = true;
+      input.classList.add('input-unavailable');
+      input.title = 'Unavailable';
+      input.value = 0; // ensure value is 0 to avoid triggering validations
+      return; // skip adding listener
+    }
+
+    // clamp value to min/max on input to avoid browser validation popup
+    input.addEventListener("input", () => {
+    const min = parseInt(input.getAttribute('min')) || 0;
+    const max = parseInt(input.getAttribute('max')) || Infinity;
+    let val = parseInt(input.value) || 0;
+    if (val < min) {
+      val = min;
+      input.value = val;
+    }
+    if (val > max) {
+      val = max;
+      input.value = val;
+      notify.error(`Quantity must be <= ${max}`);
+    }
+    drawBoxDetail();
+    });
+  })
+
   const drawBoxDetail = () => {
     let totalPrice = 0;
     listInputQuantity.forEach(input => {
+  if (input.readOnly) return; // skip unavailable inputs
       let quantity = parseInt(input.value);
       const fieldName = input.getAttribute("input-quantity");
       const price = parseInt(input.getAttribute("data-price"));
@@ -573,7 +593,7 @@ if(boxTourDetail) {
       }
 
       if(quantity > max) {
-        notify.error(`Quantity must be <= ${max}`);
+        notify.error(`Not enough seats available`);
         input.value = max;
         quantity = max;
       }
@@ -587,6 +607,7 @@ if(boxTourDetail) {
   };
 
   listInputQuantity.forEach(input => {
+  if (input.readOnly) return;
     input.addEventListener("input", () => {
       drawBoxDetail();
     });
@@ -600,6 +621,32 @@ if(boxTourDetail) {
     const quantityAdult = parseInt(boxTourDetail.querySelector(`[name="quantityAdult"]`).value);
     const quantityChildren = parseInt(boxTourDetail.querySelector(`[name="quantityChildren"]`).value);
     const quantityBaby = parseInt(boxTourDetail.querySelector(`[name="quantityBaby"]`).value);
+
+    // Validate quantities against input max (stock) and non-negative
+    const inputAdult = boxTourDetail.querySelector(`[name="quantityAdult"]`);
+    const inputChildren = boxTourDetail.querySelector(`[name="quantityChildren"]`);
+    const inputBaby = boxTourDetail.querySelector(`[name="quantityBaby"]`);
+    const maxAdult = parseInt(inputAdult.getAttribute('max')) || 0;
+    const maxChildren = parseInt(inputChildren.getAttribute('max')) || 0;
+    const maxBaby = parseInt(inputBaby.getAttribute('max')) || 0;
+
+    if (quantityAdult < 0 || quantityChildren < 0 || quantityBaby < 0) {
+      notify.error("Quantity must be >= 0");
+      return;
+    }
+
+    // If the entire tour is unavailable (all categories max == 0), block and show 'Unavailable'
+    const allMaxZero = (maxAdult === 0 && maxChildren === 0 && maxBaby === 0);
+    if (allMaxZero && (quantityAdult > 0 || quantityChildren > 0 || quantityBaby > 0)) {
+      notify.error("Unavailable");
+      return;
+    }
+
+    // For individual categories, ensure user doesn't exceed available stock
+    if (quantityAdult > maxAdult || quantityChildren > maxChildren || quantityBaby > maxBaby) {
+      notify.error("Not enough seats available");
+      return;
+    }
 
     if(quantityAdult > 0 || quantityChildren > 0 || quantityBaby > 0) {
       const item = {

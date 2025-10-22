@@ -14,6 +14,7 @@ const schema = new mongoose.Schema(
     bannersSection3: [String],
     bannerSection5: String,
     bannerSection7: String,
+    workingHours: String,
   }
 );
 

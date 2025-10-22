@@ -655,6 +655,17 @@ if(settingWebsiteInfoForm) {
       const backgroundSection1 = filePond.backgroundSection1 ? filePond.backgroundSection1.getFile()?.file : null;
       const bannerSection5 = filePond.bannerSection5 ? filePond.bannerSection5.getFile()?.file : null;
       const bannerSection7 = filePond.bannerSection7 ? filePond.bannerSection7.getFile()?.file : null;
+      // Working Hours (TinyMCE-aware)
+      let workingHours = "";
+      try {
+        if(typeof tinymce !== 'undefined' && tinymce.get && tinymce.get('workingHours')) {
+          workingHours = tinymce.get('workingHours').getContent();
+        } else {
+          workingHours = event.target.workingHours ? event.target.workingHours.value : "";
+        }
+      } catch (e) {
+        workingHours = event.target.workingHours ? event.target.workingHours.value : "";
+      }
 
       // Tạo FormData
       const formData = new FormData();
@@ -687,6 +698,9 @@ if(settingWebsiteInfoForm) {
       }
       if (bannerSection7) {
         formData.append("bannerSection7", bannerSection7);
+      }
+      if (workingHours) {
+        formData.append("workingHours", workingHours);
       }
 
       fetch(`/${pathAdmin}/setting/website-info`, {

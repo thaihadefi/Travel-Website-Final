@@ -82,7 +82,8 @@ module.exports.createPost = async (req, res) => {
     // Estimated
     req.body.subTotal = 0;
 
-    // Tour list
+    // Tour list: attempt to decrement stock atomically per item
+    const decremented = []; // keep track to rollback if any fail
     for (const item of req.body.items) {
       const tourInfo = await Tour.findOne({
         _id: item.tourId,
@@ -104,16 +105,47 @@ module.exports.createPost = async (req, res) => {
         item.name = tourInfo.name;
         item.slug = tourInfo.slug;
 
-        // Update remaining stock of tour
-        await Tour.updateOne({
+        // Attempt atomic decrement: ensure stock >= requested and decrement via $inc
+        const updateResult = await Tour.updateOne({
           _id: item.tourId,
           deleted: false,
-          status: "active"
+          status: "active",
+          stockAdult: { $gte: item.quantityAdult },
+          stockChildren: { $gte: item.quantityChildren },
+          stockBaby: { $gte: item.quantityBaby }
         }, {
-          stockAdult: tourInfo.stockAdult - item.quantityAdult,
-          stockChildren: tourInfo.stockChildren - item.quantityChildren,
-          stockBaby: tourInfo.stockBaby - item.quantityBaby,
-        })
+          $inc: {
+            stockAdult: -item.quantityAdult,
+            stockChildren: -item.quantityChildren,
+            stockBaby: -item.quantityBaby
+          }
+        });
+
+        if (updateResult.matchedCount === 0) {
+          // Rollback previously decremented items
+          for (const d of decremented) {
+            await Tour.updateOne({ _id: d.tourId }, { $inc: {
+              stockAdult: d.quantityAdult,
+              stockChildren: d.quantityChildren,
+              stockBaby: d.quantityBaby
+            }});
+          }
+
+          // Return error to client
+          res.json({
+            code: "error",
+            message: `Not enough seats available for tour: ${tourInfo.name}`
+          });
+          return;
+        }
+
+        // record successful decrement for potential rollback
+        decremented.push({
+          tourId: item.tourId,
+          quantityAdult: item.quantityAdult,
+          quantityChildren: item.quantityChildren,
+          quantityBaby: item.quantityBaby
+        });
       }
     }
 
@@ -247,7 +279,7 @@ module.exports.paymentZaloPay = async (req, res) => {
       item: JSON.stringify(items),
       embed_data: JSON.stringify(embed_data),
       amount: orderDetail.total,
-      description: `Order ${orderCode}`,
+      description: `Thanh toán đơn hàng ${orderCode}`,
       bank_code: "",
       callback_url: `${process.env.WEBSITE_DOMAIN}/order/payment-zalopay-result`
     };
@@ -284,7 +316,7 @@ module.exports.paymentZaloPayResultPost = async (req, res) => {
 
     let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
 
-    // Check valid callback (from ZaloPay server)
+    // Check if callback is valid (from ZaloPay server)
     if (reqMac !== mac) {
       // Invalid callback
       result.return_code = -1;
@@ -292,10 +324,10 @@ module.exports.paymentZaloPayResultPost = async (req, res) => {
     }
     else {
       // Payment successful
-      // merchant updates order status to paid
+      // Merchant updates the order status
       let dataJson = JSON.parse(dataStr, config.key2);
 
-      // Update order status to paid
+      // Update order payment status to "paid"
       const [orderCode, phone] = dataJson.app_user.split("-");
       await Order.updateOne({
         code: orderCode,
@@ -308,11 +340,11 @@ module.exports.paymentZaloPayResultPost = async (req, res) => {
       result.return_message = "success";
     }
   } catch (ex) {
-    result.return_code = 0; // ZaloPay server will callback (up to 3 times)
+    result.return_code = 0; // ZaloPay server will callback again (up to 3 times)
     result.return_message = ex.message;
   }
 
-  // Notify result to ZaloPay server
+  // Notify the result to ZaloPay server
   res.json(result);
 }
 
@@ -377,7 +409,7 @@ module.exports.paymentVNPay = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex"); 
+    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
     vnp_Params['vnp_SecureHash'] = signed;
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
@@ -390,8 +422,6 @@ module.exports.paymentVNPay = async (req, res) => {
 
 module.exports.paymentVNPayResult = async (req, res) => {
   try {
-    console.log("[VNPay Result] Received callback with query:", req.query);
-    
     let vnp_Params = req.query;
 
     let secureHash = vnp_Params['vnp_SecureHash'];
@@ -407,39 +437,23 @@ module.exports.paymentVNPayResult = async (req, res) => {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");     
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");     
-    
-    console.log("[VNPay Result] Signature match:", secureHash === signed);
-    
+    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
+
     if(secureHash === signed){
-        // Parse vnp_TxnRef: format is "orderCode-phone-timestamp"
-        const txnParts = vnp_Params["vnp_TxnRef"].split("-");
-        const orderCode = txnParts[0];
-        const phone = txnParts[1];
-        
-        console.log("[VNPay Result] Parsed orderCode:", orderCode, "phone:", phone);
-        
-        const updateResult = await Order.updateOne({
+        // Check if data in db is valid and notify result
+        const [orderCode, phone] = vnp_Params["vnp_TxnRef"].split("-");
+        await Order.updateOne({
           code: orderCode,
           phone: phone
         }, {
           paymentStatus: "paid"
         })
-        
-        console.log("[VNPay Result] Update result:", updateResult);
-        
-        const redirectUrl = `/order/success?orderCode=${orderCode}&phone=${phone}`;
-        console.log("[VNPay Result] Redirecting to:", redirectUrl);
-        
-        // Use relative path for redirect
-        res.redirect(redirectUrl);
+        res.redirect(`${process.env.WEBSITE_DOMAIN}/order/success?orderCode=${orderCode}&phone=${phone}`);
     } else{
-        console.log("[VNPay Result] Signature mismatch - redirecting to home");
-        // Signature mismatch - redirect to home
-        res.redirect("/");
+        res.render('success', {code: '97'})
     }
   } catch (error) {
-    console.log("[VNPay Result] Error:", error);
+    console.log(error);
     res.redirect("/");
   }
 }
@@ -453,17 +467,17 @@ function sortObject(obj) {
   let str = [];
   let key;
 
-  // Iterate through the object's properties
+  // Iterate over the object's properties
   for (key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       str.push(encodeURIComponent(key));
     }
   }
 
-  // Sort keys
+  // Sort the keys
   str.sort();
 
-  // Create new object with sorted keys
+  // Create a new object with the sorted keys
   for (key = 0; key < str.length; key++) {
     sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
   }
