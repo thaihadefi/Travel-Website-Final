@@ -36,9 +36,8 @@ block main
                 <i class="fa-solid fa-clock"></i>
               .contact-details
                 h3 Working Hours
-                p Monday - Friday: 8:00 AM - 6:00 PM
-                p Saturday: 9:00 AM - 5:00 PM
-                p Sunday: Closed
+                if settingWebsiteInfo && settingWebsiteInfo.workingHours
+                  .inner-content !{settingWebsiteInfo.workingHours}
         
         .col-lg-6.col-md-12
           .contact-form-wrapper

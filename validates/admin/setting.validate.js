@@ -38,6 +38,8 @@ module.exports.websiteInfoPatch = async (req, res, next) => {
       .allow(''),
     bannerSection7: Joi.string()
       .allow(''),
+    workingHours: Joi.string()
+      .allow(''),
   });
 
   const { error } = schema.validate(req.body, { abortEarly: false });

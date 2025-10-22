@@ -87,6 +87,9 @@ block main
             name="bannerSection7"
             filepond-image
             )
+      .inner-group.inner-two-col
+        label(for="workingHours" class="inner-label") Working Hours 
+        textarea(id="workingHours" name="workingHours" textarea-mce)= record.workingHours
       .inner-button.inner-two-col
         button Update
     .inner-back
