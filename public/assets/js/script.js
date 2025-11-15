@@ -25,57 +25,74 @@ if(buttonMenuMobile) {
 }
 
   // Hide box quantity
-const boxUserSection1 = document.querySelector('.box-user-section-1');
-if (boxUserSection1) {
-  // input used to show summary like "A: x, C: y, B: z"
-  const input = boxUserSection1.querySelector('input');
+  // Support both old wrapper `.box-user-section-1` and current `.inner-box.inner-user`.
+  const boxUserSection1 = document.querySelector('.box-user-section-1') || document.querySelector('.inner-box.inner-user');
+  if (boxUserSection1) {
+    // input used to show summary like "A: x, C: y, B: z"
+    const input = boxUserSection1.querySelector('input.inner-input') || boxUserSection1.querySelector('input');
+    const downIcon = boxUserSection1.querySelector('.inner-down');
 
-  document.addEventListener("click", (event) => {
-    if(!boxUserSection1.contains(event.target)) {
-      boxUserSection1.classList.remove("active");
+    // Toggle dropdown when clicking the summary input or the down icon
+    const toggleActive = (e) => {
+      e && e.stopPropagation();
+      boxUserSection1.classList.toggle('active');
+    };
+
+    if (input) {
+      input.addEventListener('click', toggleActive);
     }
-  })
+    if (downIcon) {
+      downIcon.addEventListener('click', toggleActive);
+    }
 
-  // Update quantity in input box
-  const updateQuantityInput = () => {
-    const listBoxNumber = boxUserSection1.querySelectorAll(".inner-quantity .inner-number");
-    const listNumber = [];
-    listBoxNumber.forEach(item => {
-      const number = parseInt(item.value);
-      listNumber.push(number);
-    })
-    input.value = `A: ${listNumber[0]}, C: ${listNumber[1]}, B: ${listNumber[2]}`;
-  }
-
-  // Click on up button
-  const listButtonUp = boxUserSection1.querySelectorAll(".inner-quantity .inner-up");
-  listButtonUp.forEach(button => {
-    button.addEventListener("click", () => {
-      const parent = button.closest(".inner-count");
-      const boxNumber = parent.querySelector(".inner-number");
-      const number = parseInt(boxNumber.value);
-      const numberUpdate = number + 1;
-      boxNumber.value = numberUpdate;
-      updateQuantityInput();
-    })
-  })
-
-  // Click on down button
-  const listButtonDown = boxUserSection1.querySelectorAll(".inner-quantity .inner-down");
-  listButtonDown.forEach(button => {
-    button.addEventListener("click", () => {
-      const parent = button.closest(".inner-count");
-      const boxNumber = parent.querySelector(".inner-number");
-      const number = parseInt(boxNumber.value);
-      if(number > 0) {
-        const numberUpdate = number - 1;
-        boxNumber.value = numberUpdate;
-        updateQuantityInput();
+    document.addEventListener("click", (event) => {
+      if(!boxUserSection1.contains(event.target)) {
+        boxUserSection1.classList.remove("active");
       }
     })
-  })
-}
-// End Box User Section 1
+
+    // Update quantity in input box
+    const updateQuantityInput = () => {
+      const listBoxNumber = boxUserSection1.querySelectorAll(".inner-quantity .inner-number");
+      const listNumber = [];
+      listBoxNumber.forEach(item => {
+        const number = parseInt(item.value) || 0;
+        listNumber.push(number);
+      })
+      // Ensure we have 3 numbers (Adults, Children, Babies)
+      while(listNumber.length < 3) listNumber.push(0);
+      input.value = `A: ${listNumber[0]}, C: ${listNumber[1]}, B: ${listNumber[2]}`;
+    }
+
+    // Click on up button
+    const listButtonUp = boxUserSection1.querySelectorAll(".inner-quantity .inner-up");
+    listButtonUp.forEach(button => {
+      button.addEventListener("click", () => {
+        const parent = button.closest(".inner-count");
+        const boxNumber = parent.querySelector(".inner-number");
+        const number = parseInt(boxNumber.value) || 0;
+        const numberUpdate = number + 1;
+        boxNumber.value = numberUpdate;
+        updateQuantityInput();
+      })
+    })
+
+    // Click on down button
+    const listButtonDown = boxUserSection1.querySelectorAll(".inner-quantity .inner-down");
+    listButtonDown.forEach(button => {
+      button.addEventListener("click", () => {
+        const parent = button.closest(".inner-count");
+        const boxNumber = parent.querySelector(".inner-number");
+        const number = parseInt(boxNumber.value) || 0;
+        if(number > 0) {
+          const numberUpdate = number - 1;
+          boxNumber.value = numberUpdate;
+          updateQuantityInput();
+        }
+      })
+    })
+  }
+  // End Box User Section
 
 // Clock Expire
 const clockExpire = document.querySelector("[clock-expire]");
