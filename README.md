@@ -5,7 +5,7 @@ The project is built on Node.js, Express, and MongoDB, with Pug templates for se
 ## Website domain: 
 https://uit-ua.onrender.com/
 
-## Running the code
+## Running the code:
 Run `yarn install` to install all dependencies.
 
 Run `yarn start` to start the development server.
