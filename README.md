@@ -3,6 +3,7 @@
 ## 📋 Overview
 
 The Travel Website project is a full-stack web application that provides an online tour booking platform. It allows customers to browse tours, manage a shopping cart, place orders with multiple payment methods, and track their orders. At the same time, it provides an administration back office where administrators can manage tours, categories, orders, users, website configurations, and access control. 
+
 The project is built on Node.js, Express, and MongoDB, with Pug templates for server-side rendering and a combination of custom JavaScript and third-party libraries on the frontend.
 
 🌐 **Live Demo:** https://uit-ua.onrender.com/
@@ -241,11 +242,7 @@ yarn start
 
 ### Creating Admin Account
 
-After first run, you need to create an admin account manually through:
-1. Register a new account via admin registration page
-2. Or use MongoDB Compass to insert an admin document directly
-
-⚠️ **Remember to hash passwords with bcrypt before inserting directly to database!**
+After first run, you need to create an admin account manually by registering a new account via admin registration page
 
 ## 🔧 Environment Variables
 
