@@ -424,10 +424,11 @@ The project implements a sophisticated Role-Based Access Control system:
 
 ## 🙏 Acknowledgments
 
-- **Cloudinary** - Free cloud storage for images
-- **MongoDB Atlas** - Database hosting
-- **Render** - Free deployment platform
 - Course instructors
+- **GitHub Student Developer Pack**
+- **Render** - Free deployment platform
+- **MongoDB Atlas** - Database hosting
+- **Cloudinary** - Free cloud storage for images
 - Open source community for libraries used
 
 ---
