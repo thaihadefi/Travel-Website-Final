@@ -47,8 +47,6 @@ The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** 
 | ⚙️ **Website Settings** | Configure site information and contact details |
 | 👤 **Profile Management** | Update admin profile information |
 
-
-
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |
@@ -71,6 +69,8 @@ The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** 
 | **Email** | Nodemailer | Transactional emails (Gmail SMTP) |
 | **Database** | MongoDB | NoSQL database |
 | **DevOps** | Docker | Containerization platform |
+| | Docker Compose | Multi-container orchestration |
+| | Docker Hub | Container image registry |
 | | Render | Cloud deployment and hosting |
 | | Git | Version control system |
 
@@ -207,6 +207,60 @@ ENV PORT=5001
 EXPOSE 5001
 
 CMD ["node", "index.js"]
+```
+
+### Using Docker Compose (Recommended)
+
+Docker Compose simplifies running the application with a single command.
+
+**Features:**
+- ✅ One-command deployment
+- ✅ Health checks configured
+- ✅ Auto-restart on failure
+- ✅ Easy log management
+
+```bash
+# Start the application
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+
+# Restart service
+docker-compose restart
+
+# View running services
+docker-compose ps
+
+# Rebuild and restart
+docker-compose up -d --build
+```
+
+**What's included:**
+
+| Service | Image | Port | Description |
+|---------|-------|------|-------------|
+| **web** | thaihadefi/travel-website:v1.0 | 5001 | Express application server |
+
+**Database:** Uses MongoDB Atlas (cloud database) - configure `DATABASE` in `.env`
+
+### Pull from Docker Hub
+
+The image is publicly available on Docker Hub:
+
+```bash
+# Pull latest image
+docker pull thaihadefi/travel-website:v1.0
+
+# Run directly from Docker Hub
+docker run -d -p 5001:5001 \
+  -e DATABASE="your-mongodb-uri" \
+  --env-file .env \
+  --name travel-website \
+  thaihadefi/travel-website:v1.0
 ```
 
 ## 🚀 Local Development
@@ -423,7 +477,6 @@ The project implements a sophisticated Role-Based Access Control system:
 | slugify | ^1.6.6 | Generate URL slugs |
 | dotenv | ^17.2.1 | Environment variables |
 | nodemon | ^3.1.10 | Development auto-reload |
-
 
 ## 🙏 Acknowledgments
 
