@@ -223,7 +223,7 @@ yarn start
 
 ### Creating Admin Account
 
-After first run, you need to create an admin account manually by registering a new account via admin registration page
+After first run, you need to create an admin account manually by registering a new account via admin registration page.
 
 ## 🔧 Environment Variables
 
@@ -291,39 +291,142 @@ TINYMCE_API_KEY=your-tinymce-api-key
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/` | Homepage |
-| `GET` | `/tours` | Tour list with filters |
-| `GET` | `/tours/:slug` | Tour detail page |
+| `GET` | `/tour/detail/:slug` | Tour detail page |
 | `GET` | `/category/:slug` | Tours by category |
 | `GET` | `/search` | Search tours |
+| `GET` | `/cart` | Cart page |
 | `POST` | `/cart/detail` | Get cart details from localStorage |
-| `POST` | `/order/create` | Create new order |
 | `GET` | `/contact` | Contact page |
-| `POST` | `/contact/send` | Send contact message |
+| `POST` | `/contact/send-message` | Send contact message |
+| `POST` | `/contact/create` | Create contact form submission |
+| `POST` | `/order/create` | Create new order |
+| `GET` | `/order/track` | Order tracking page |
+| `POST` | `/order/track` | Track order by code |
+| `GET` | `/order/success` | Order success page |
+| `GET` | `/order/payment-zalopay` | ZaloPay payment redirect |
+| `POST` | `/order/payment-zalopay-result` | ZaloPay payment callback |
+| `GET` | `/order/payment-vnpay` | VNPay payment redirect |
+| `GET` | `/order/payment-vnpay-result` | VNPay payment callback |
 
 ### Admin Routes (Prefix: `/admin`)
 
+#### Dashboard
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/dashboard` | Dashboard statistics |
-| `GET` | `/tours` | Tour list |
-| `GET` | `/tours/create` | Create tour form |
-| `POST` | `/tours/create` | Create new tour |
-| `GET` | `/tours/edit/:id` | Edit tour form |
-| `PATCH` | `/tours/edit/:id` | Update tour |
-| `DELETE` | `/tours/delete/:id` | Soft delete tour |
-| `GET` | `/categories` | Category list |
-| `GET` | `/orders` | Order list |
-| `PATCH` | `/orders/change-status/:id` | Update order status |
-| `GET` | `/users` | User list |
-| `GET` | `/accounts` | Admin account list |
-| `GET` | `/profile` | Admin profile page |
+| `POST` | `/dashboard/revenue-chart` | Get revenue chart data |
+
+#### Tour Management (`/admin/tour`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/tour/list` | Tour list |
+| `GET` | `/tour/create` | Create tour form |
+| `POST` | `/tour/create` | Create new tour |
+| `GET` | `/tour/edit/:id` | Edit tour form |
+| `PATCH` | `/tour/edit/:id` | Update tour |
+| `PATCH` | `/tour/delete/:id` | Soft delete tour |
+| `GET` | `/tour/trash` | Deleted tours list |
+| `PATCH` | `/tour/undo/:id` | Restore deleted tour |
+| `DELETE` | `/tour/destroy/:id` | Permanently delete tour |
+| `PATCH` | `/tour/change-multi` | Bulk actions on tours |
+
+#### Category Management (`/admin/category`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/category/list` | Category list |
+| `GET` | `/category/create` | Create category form |
+| `POST` | `/category/create` | Create new category |
+| `GET` | `/category/edit/:id` | Edit category form |
+| `PATCH` | `/category/edit/:id` | Update category |
+| `PATCH` | `/category/delete/:id` | Soft delete category |
+| `GET` | `/category/trash` | Deleted categories list |
+| `PATCH` | `/category/undo/:id` | Restore deleted category |
+| `DELETE` | `/category/destroy/:id` | Permanently delete category |
+| `PATCH` | `/category/change-multi` | Bulk actions on categories |
+
+#### Order Management (`/admin/order`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/order/list` | Order list |
+| `GET` | `/order/edit/:id` | Edit order form |
+| `PATCH` | `/order/edit/:id` | Update order |
+| `PATCH` | `/order/delete/:id` | Soft delete order |
+| `GET` | `/order/trash` | Deleted orders list |
+| `PATCH` | `/order/undo/:id` | Restore deleted order |
+| `DELETE` | `/order/destroy/:id` | Permanently delete order |
+| `PATCH` | `/order/change-multi` | Bulk actions on orders |
+
+#### User Management (`/admin/user`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/user/list` | User list |
+
+#### Contact Management (`/admin/contact`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/contact/list` | Contact form submissions list |
+| `PATCH` | `/contact/delete/:id` | Soft delete contact |
+| `GET` | `/contact/trash` | Deleted contacts list |
+| `PATCH` | `/contact/undo/:id` | Restore deleted contact |
+| `DELETE` | `/contact/destroy/:id` | Permanently delete contact |
+| `PATCH` | `/contact/change-multi` | Bulk actions on contacts |
+
+#### Message Management (`/admin/message`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/message/list` | Customer messages list |
+| `PATCH` | `/message/delete/:id` | Soft delete message |
+| `GET` | `/message/trash` | Deleted messages list |
+| `PATCH` | `/message/undo/:id` | Restore deleted message |
+| `DELETE` | `/message/destroy/:id` | Permanently delete message |
+| `PATCH` | `/message/change-multi` | Bulk actions on messages |
+
+#### Profile Management (`/admin/profile`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/profile/edit` | Edit profile form |
 | `PATCH` | `/profile/edit` | Update admin profile |
-| `GET` | `/contacts` | Contact form submissions list |
-| `GET` | `/messages` | Customer messages list |
-| `GET` | `/setting/website-info` | Website settings page |
-| `PATCH` | `/setting/website-info` | Update website settings |
-| `GET` | `/setting/account-admin/list` | Admin accounts management |
-| `GET` | `/setting/role/list` | Roles management |
+| `GET` | `/profile/change-password` | Change password form |
+| `PATCH` | `/profile/change-password` | Update password |
+
+#### Website Settings (`/admin/setting`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/setting/list` | Settings overview |
+| `GET` | `/setting/website-info` | Website info settings |
+| `PATCH` | `/setting/website-info` | Update website info |
+
+#### Admin Account Management (`/admin/setting/account-admin`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/setting/account-admin/list` | Admin accounts list |
+| `GET` | `/setting/account-admin/create` | Create admin form |
+| `POST` | `/setting/account-admin/create` | Create new admin |
+| `GET` | `/setting/account-admin/edit/:id` | Edit admin form |
+| `PATCH` | `/setting/account-admin/edit/:id` | Update admin account |
+| `PATCH` | `/setting/account-admin/delete/:id` | Soft delete admin |
+| `GET` | `/setting/account-admin/trash` | Deleted admins list |
+| `PATCH` | `/setting/account-admin/undo/:id` | Restore deleted admin |
+| `DELETE` | `/setting/account-admin/destroy/:id` | Permanently delete admin |
+| `PATCH` | `/setting/account-admin/change-multi` | Bulk actions on admins |
+
+#### Role Management (`/admin/setting/role`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/setting/role/list` | Roles list |
+| `GET` | `/setting/role/create` | Create role form |
+| `POST` | `/setting/role/create` | Create new role |
+| `GET` | `/setting/role/edit/:id` | Edit role form |
+| `PATCH` | `/setting/role/edit/:id` | Update role |
+| `PATCH` | `/setting/role/delete/:id` | Soft delete role |
+| `GET` | `/setting/role/trash` | Deleted roles list |
+| `PATCH` | `/setting/role/undo/:id` | Restore deleted role |
+| `DELETE` | `/setting/role/destroy/:id` | Permanently delete role |
+| `PATCH` | `/setting/role/change-multi` | Bulk actions on roles |
+
+#### File Upload (`/admin/upload`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | `POST` | `/upload/image` | Upload image to Cloudinary |
 
 ### Authentication Routes (Prefix: `/admin/account`)
@@ -334,6 +437,7 @@ TINYMCE_API_KEY=your-tinymce-api-key
 | `POST` | `/login` | Authenticate admin |
 | `GET` | `/register` | Registration page |
 | `POST` | `/register` | Register new admin account |
+| `GET` | `/register-initial` | Initial admin registration |
 | `GET` | `/forgot-password` | Forgot password page |
 | `POST` | `/forgot-password` | Send OTP to email |
 | `GET` | `/otp-password` | OTP verification page |
