@@ -134,7 +134,15 @@ travel-website/
 │   └── mail.helper.js
 ├── views/                     # Pug templates
 │   ├── admin/                 # Admin panel views
+│   │   ├── layouts/
+│   │   ├── mixins/
+│   │   ├── pages/
+│   │   └── partials/
 │   └── client/                # Client views
+│       ├── layouts/
+│       ├── mixins/
+│       ├── pages/
+│       └── partials/
 ├── public/                    # Static assets
 │   ├── assets/                # Client assets
 │   │   ├── css/
@@ -143,7 +151,15 @@ travel-website/
 │   └── admin/                 # Admin panel assets
 ├── index.js                   # Application entry point
 ├── package.json
-└── dockerfile
+├── yarn.lock
+├── Dockerfile                 # Docker build configuration
+├── docker-compose.yml         # Docker Compose orchestration
+├── .dockerignore             # Docker build exclusions
+├── .env                      # Environment variables (not in git)
+├── .env.example              # Environment template
+├── .gitignore
+├── DOCKER.md                 # Docker deployment guide
+└── README.md                 # Project documentation
 ```
 
 ## 🐳 Docker Deployment
