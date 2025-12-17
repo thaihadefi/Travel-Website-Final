@@ -148,120 +148,28 @@ travel-website/
 
 ## 🐳 Docker Deployment
 
-### Container Architecture
-
-| Service | Image | Port | Description |
-|---------|-------|------|-------------|
-| **web** | `node:alpine` | 5001 | Express application server |
-
-### Quick Deploy
+### Quick Start
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/thaihadefi/Travel-Website-Final.git
-cd Travel-Website-Final
+# Using Docker Compose (Recommended)
+docker-compose up -d
 
-# 2. Configure environment
-cp .env.example .env
-# Edit .env with your credentials
-
-# 3. Build and run with Docker
+# Or build from Dockerfile
 docker build -t travel-website .
 docker run -p 5001:5001 --env-file .env travel-website
 
-# 4. Verify container
-docker ps
-
-# 5. Access the application
-# Client: http://localhost:5001
-# Admin: http://localhost:5001/admin
+# Or pull from Docker Hub
+docker pull thaihadefi/travel-website:v1.0
+docker run -p 5001:5001 --env-file .env thaihadefi/travel-website:v1.0
 ```
 
-### Docker Commands
-
-| Command | Description |
-|---------|-------------|
-| `docker build -t travel-website .` | Build Docker image |
-| `docker run -p 5001:5001 --env-file .env travel-website` | Run container with environment variables |
-| `docker ps` | List running containers |
-| `docker logs <container-id>` | View container logs |
-| `docker exec -it <container-id> sh` | Access container shell |
-| `docker stop <container-id>` | Stop container |
-
-### Dockerfile
-
-```dockerfile
-FROM node:alpine
-
-WORKDIR /usr/src/app
-
-COPY package.json yarn.lock ./
-
-RUN yarn install --production --frozen-lockfile
-
-COPY . .
-
-ENV NODE_ENV=production
-ENV PORT=5001
-
-EXPOSE 5001
-
-CMD ["node", "index.js"]
-```
-
-### Using Docker Compose (Recommended)
-
-Docker Compose simplifies running the application with a single command.
-
-**Features:**
-- ✅ One-command deployment
-- ✅ Health checks configured
-- ✅ Auto-restart on failure
-- ✅ Easy log management
-
-```bash
-# Start the application
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop the application
-docker-compose down
-
-# Restart service
-docker-compose restart
-
-# View running services
-docker-compose ps
-
-# Rebuild and restart
-docker-compose up -d --build
-```
+**📖 For detailed Docker instructions, see [DOCKER.md](DOCKER.md)**
 
 **What's included:**
-
-| Service | Image | Port | Description |
-|---------|-------|------|-------------|
-| **web** | thaihadefi/travel-website:v1.0 | 5001 | Express application server |
-
-**Database:** Uses MongoDB Atlas (cloud database) - configure `DATABASE` in `.env`
-
-### Pull from Docker Hub
-
-The image is publicly available on Docker Hub:
-
-```bash
-# Pull latest image
-docker pull thaihadefi/travel-website:v1.0
-
-# Run directly from Docker Hub
-docker run -d -p 5001:5001 \
-  -e DATABASE="your-mongodb-uri" \
-  --env-file .env \
-  --name travel-website \
-  thaihadefi/travel-website:v1.0
-```
+- ✅ `Dockerfile` - Build production image
+- ✅ `docker-compose.yml` - One-command deployment
+- ✅ Health checks & auto-restart
+- ✅ MongoDB Atlas integration
 
 ## 🚀 Local Development
 

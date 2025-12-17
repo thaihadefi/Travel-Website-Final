@@ -37,7 +37,7 @@ docker-compose logs -f
 
 This project uses **MongoDB Atlas** (cloud database):
 - Set `DATABASE` in `.env` with your MongoDB Atlas connection string
-- Example: `DATABASE="mongodb+srv://user:pass@cluster.mongodb.net/travel-website"`
+- Example: `DATABASE="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>"`
 - Get free MongoDB Atlas account at: https://www.mongodb.com/cloud/atlas
 
 ## Common Commands
