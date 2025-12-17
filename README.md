@@ -70,6 +70,9 @@ The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** 
 | | VNPay API | Vietnamese bank payment gateway |
 | **Email** | Nodemailer | Transactional emails (Gmail SMTP) |
 | **Database** | MongoDB | NoSQL database |
+| **DevOps** | Docker | Containerization platform |
+| | Render | Cloud deployment and hosting |
+| | Git | Version control system |
 
 ## 📁 Project Structure
 
@@ -425,7 +428,7 @@ The project implements a sophisticated Role-Based Access Control system:
 ## 🙏 Acknowledgments
 
 - Course instructors
-- **GitHub Student Developer Pack**
+- GitHub Student Developer Pack
 - **Render** - Free deployment platform
 - **MongoDB Atlas** - Database hosting
 - **Cloudinary** - Free cloud storage for images
