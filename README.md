@@ -230,37 +230,22 @@ After first run, you need to create an admin account manually by registering a n
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Database
-DATABASE=mongodb+srv://username:password@cluster0.tlpf0fp.mongodb.net/database-name
-
-# JWT Authentication
-JWT_SECRET=your-random-secret-key
-
-# Email Configuration (Gmail)
-GMAIL_USER=your-email@gmail.com
-GMAIL_PASS=your-app-password
-
-# Cloudinary Configuration
-CLOUDINARY_NAME=your-cloudinary-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-
-# ZaloPay Configuration
-ZALOPAY_APPID=2554
-ZALOPAY_KEY1=your-zalopay-key1
-ZALOPAY_KEY2=your-zalopay-key2
-ZALOPAY_DOMAIN=https://sb-openapi.zalopay.vn
-
-# VNPay Configuration
-VNPAY_TMNCODE=your-vnpay-tmncode
-VNPAY_SECRET=your-vnpay-secret-key
-VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-
-# Website Domain (for payment callbacks)
-WEBSITE_DOMAIN=http://localhost:5001
-
-# TinyMCE (Optional)
-TINYMCE_API_KEY=your-tinymce-api-key
+DATABASE="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database-name>"
+JWT_SECRET="randomstring"
+GMAIL_USER="abc@gmail.com"
+GMAIL_PASS="abcd abcd abcd abcd"
+CLOUDINARY_NAME=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""
+ZALOPAY_APPID="2554"
+ZALOPAY_KEY1="sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
+ZALOPAY_KEY2="trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
+ZALOPAY_DOMAIN="https://sb-openapi.zalopay.vn"
+WEBSITE_DOMAIN="https://uit-ua.onrender.com"
+VNPAY_TMNCODE="7L486899"
+VNPAY_SECRET="NHDMUVZ3QV0HTP1PZMBQUQBJBCQJD94J"
+VNPAY_URL="https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+TINYMCE_API_KEY=""
 ```
 
 ### Required Environment Variables
