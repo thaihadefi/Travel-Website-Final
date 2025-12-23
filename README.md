@@ -17,7 +17,10 @@ The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** 
 - [Local Development](#-local-development)
 - [Environment Variables](#-environment-variables)
 - [API Endpoints](#-api-endpoints)
+- [Important Notes & Limitations](#️-important-notes--limitations)
 - [Security Features](#-security-features)
+- [Key Dependencies](#-key-dependencies)
+- [Acknowledgments](#-acknowledgments)
 
 ## ✨ Key Features
 
