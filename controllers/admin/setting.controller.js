@@ -6,6 +6,7 @@ const AccountAdmin = require("../../models/account-admin.model");
 const Category = require("../../models/category.model");
 const categoryHelper = require("../../helpers/category.helper");
 const moment = require("moment");
+const cloudinaryHelper = require("../../helpers/cloudinary.helper");
 
 module.exports.list = async (req, res) => {
   res.render("admin/pages/setting-list", {
@@ -485,6 +486,16 @@ module.exports.accountAdminChangeMultiPatch = async (req, res) => {
         })
         break;
       case "destroy":
+        // Get all accounts to delete avatars from Cloudinary
+        const accountsToDestroy = await AccountAdmin.find({ _id: { $in: ids } });
+        
+        // Delete avatars from Cloudinary
+        for (const account of accountsToDestroy) {
+          if (account.avatar) {
+            await cloudinaryHelper.deleteImage(account.avatar);
+          }
+        }
+        
         await AccountAdmin.deleteMany({
           _id: { $in: ids }
         })
@@ -699,6 +710,13 @@ module.exports.accountAdminUndoPatch = async (req, res) => {
 module.exports.accountAdminDestroyDelete = async (req, res) => {
   try {
     const id = req.params.id;
+
+    // Get account info to delete avatar from Cloudinary
+    const account = await AccountAdmin.findOne({ _id: id });
+    
+    if (account && account.avatar) {
+      await cloudinaryHelper.deleteImage(account.avatar);
+    }
 
     await AccountAdmin.deleteOne({
       _id: id
