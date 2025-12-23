@@ -431,6 +431,46 @@ TINYMCE_API_KEY=""
 | `POST` | `/reset-password` | Update new password |
 | `POST` | `/logout` | Logout admin |
 
+## ⚠️ Important Notes & Limitations
+
+### Email/OTP Functionality on Render
+
+**Note:** Render's free tier blocks outbound network traffic on certain ports, which affects email sending functionality:
+
+- ✅ **Local Development**: Email sending (OTP for password recovery) works perfectly
+- ❌ **Live Demo (Render)**: Email/OTP features are **disabled** due to Render's network restrictions
+- 🔧 **Workaround**: For production deployment, consider:
+  - Using Render's paid plan with custom network configuration
+  - Deploying to alternative platforms (Heroku, Railway, DigitalOcean, AWS)
+  - Implementing SMS-based OTP as an alternative
+
+**Affected Features:**
+- Password recovery via email OTP
+
+### Admin Account Creation
+
+**Security Note:** Admin account creation follows a secure manual verification process:
+
+- 🔓 **Public Registration Available**: Anyone can register at `/admin/register`, but accounts require manual activation
+- ✅ **Manual Verification Required**: New accounts cannot login until verified and activated by authorized personnel
+- 🔐 **Process**:
+  1. User registers via admin registration page (`/admin/register`)
+  2. Account is created in database with status `"initial"` (not yet verified)
+  3. User **cannot login** - login only works for accounts with status `"active"`
+  4. Authorized database administrator manually reviews and changes status to `"active"` 
+  5. Admin assigns appropriate role and permissions to the verified account
+
+**Account Status Values:**
+- `initial` - Newly registered, **cannot login**, pending verification
+- `active` - Verified and **can access admin panel**
+- `inactive` - Temporarily disabled
+
+**Why This Approach?**
+- Prevents unauthorized admin access even with public registration
+- Ensures only verified personnel can login to admin panel
+- Maintains security through manual activation workflow
+- Follows enterprise-level access control best practices
+
 ## 🔒 Security Features
 
 - ✅ JWT-based authentication with httpOnly cookies
