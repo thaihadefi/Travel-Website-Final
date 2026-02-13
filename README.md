@@ -1,56 +1,56 @@
-# 🌍 Travel Website 
+# Travel Website
 
-## 📋 Overview
+## Overview
 
 This project is a full-stack web application that provides an online tour booking platform. It allows customers to browse tours, manage a shopping cart, place orders with multiple payment methods, and track their orders. At the same time, it provides an administration back office where administrators can manage tours, categories, orders, users, website configurations, and access control. 
 
 The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** templates for server-side rendering and a combination of custom JavaScript and third-party libraries on the frontend.
 
-🌐 **Live Demo:** https://uit-ua.onrender.com/
+**Live Demo:** https://uit-ua.onrender.com/
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [Key Features](#-key-features)
-- [Tech Stack](#️-tech-stack)
-- [Project Structure](#-project-structure)
-- [Docker Deployment](#-docker-deployment)
-- [Local Development](#-local-development)
-- [Environment Variables](#-environment-variables)
-- [API Endpoints](#-api-endpoints)
-- [Important Notes & Limitations](#️-important-notes--limitations)
-- [Security Features](#-security-features)
-- [Key Dependencies](#-key-dependencies)
-- [Acknowledgments](#-acknowledgments)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Docker Deployment](#docker-deployment)
+- [Local Development](#local-development)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+- [Important Notes & Limitations](#important-notes--limitations)
+- [Security Features](#security-features)
+- [Key Dependencies](#key-dependencies)
+- [Acknowledgments](#acknowledgments)
 
-## ✨ Key Features
+## Key Features
 
 ### Client Features
 | Feature | Description |
 |---------|-------------|
-| 🏖️ **Tour Browsing** | Browse tours by category, city, price range, and departure date |
-| 🔍 **Advanced Search** | Search tours by keyword with real-time filtering |
-| 🛒 **Shopping Cart** | Add tours to cart with localStorage persistence |
-| 📅 **Tour Details** | View detailed tour information, schedules, and image galleries |
-| 💳 **Payment Integration** | Support for ZaloPay, VNPay, bank transfer, and cash payment |
-| 📊 **Order Tracking** | View order history and status updates |
-| 📱 **Responsive Design** | Optimized for mobile, tablet, laptop, and desktop devices |
+| **Tour Browsing** | Browse tours by category, city, price range, and departure date |
+| **Advanced Search** | Search tours by keyword with real-time filtering |
+| **Shopping Cart** | Add tours to cart with localStorage persistence |
+| **Tour Details** | View detailed tour information, schedules, and image galleries |
+| **Payment Integration** | Support for ZaloPay, VNPay, bank transfer, and cash payment |
+| **Order Tracking** | View order history and status updates |
+| **Responsive Design** | Optimized for mobile, tablet, laptop, and desktop devices |
 
 ### Admin Features
 | Feature | Description |
 |---------|-------------|
-| 🔐 **Authentication** | Admin login, registration, password recovery with email verification |
-| 📊 **Dashboard** | Overview of orders, revenue, and system statistics |
-| 🗂️ **Tour Management** | Create, edit, delete tours with image uploads |
-| 📁 **Category Management** | Organize tours into hierarchical categories |
-| 👥 **User Management** | Manage customer accounts |
-| 📦 **Order Management** | Process orders and update order status |
-| 👨‍💼 **Admin Accounts** | Manage admin accounts with role assignment |
-| 🔐 **Role & Permissions (RBAC)** | Fine-grained access control with customizable roles and permissions |
-| 📧 **Contact Messages** | View and respond to customer inquiries |
-| ⚙️ **Website Settings** | Configure site information and contact details |
-| 👤 **Profile Management** | Update admin profile information |
+| **Authentication** | Admin login, registration, password recovery with email verification |
+| **Dashboard** | Overview of orders, revenue, and system statistics |
+| **Tour Management** | Create, edit, delete tours with image uploads |
+| **Category Management** | Organize tours into hierarchical categories |
+| **User Management** | Manage customer accounts |
+| **Order Management** | Process orders and update order status |
+| **Admin Accounts** | Manage admin accounts with role assignment |
+| **Role & Permissions (RBAC)** | Fine-grained access control with customizable roles and permissions |
+| **Contact Messages** | View and respond to customer inquiries |
+| **Website Settings** | Configure site information and contact details |
+| **Profile Management** | Update admin profile information |
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology | Purpose |
 |-------|------------|---------|
@@ -77,7 +77,7 @@ The project is built on **Node.js**, **Express**, and **MongoDB**, with **Pug** 
 | | Render | Cloud deployment and hosting |
 | | Git | Version control system |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 travel-website/
@@ -165,7 +165,7 @@ travel-website/
 └── README.md                 # Project documentation
 ```
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Quick Start
 
@@ -182,15 +182,15 @@ docker pull thaihadefi/travel-website:v1.0
 docker run -p 5001:5001 --env-file .env thaihadefi/travel-website:v1.0
 ```
 
-**📖 For detailed Docker instructions, see [DOCKER.md](DOCKER.md)**
+**For detailed Docker instructions, see [DOCKER.md](DOCKER.md)**
 
 **What's included:**
-- ✅ `Dockerfile` - Build production image
-- ✅ `docker-compose.yml` - One-command deployment
-- ✅ Health checks & auto-restart
-- ✅ MongoDB Atlas integration
+- `Dockerfile` - Build production image
+- `docker-compose.yml` - One-command deployment
+- Health checks & auto-restart
+- MongoDB Atlas integration
 
-## 🚀 Local Development
+## Local Development
 
 ### Prerequisites
 
@@ -228,7 +228,7 @@ yarn start
 
 After first run, you need to create an admin account manually by registering a new account via admin registration page.
 
-## 🔧 Environment Variables
+## Environment Variables
 
 Create a `.env` file in the root directory with the following variables:
 
@@ -255,24 +255,24 @@ TINYMCE_API_KEY=""
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `DATABASE` | ✅ | MongoDB connection string (Atlas or local) |
-| `JWT_SECRET` | ✅ | Secret key for JWT token signing |
-| `GMAIL_USER` | ✅ | Gmail account for sending emails |
-| `GMAIL_PASS` | ✅ | Gmail App Password (not regular password) |
-| `CLOUDINARY_NAME` | ✅ | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | ✅ | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | ✅ | Cloudinary API secret |
-| `ZALOPAY_APPID` | ✅ | ZaloPay App ID (sandbox: 2554) |
-| `ZALOPAY_KEY1` | ✅ | ZaloPay Key 1 |
-| `ZALOPAY_KEY2` | ✅ | ZaloPay Key 2 |
-| `ZALOPAY_DOMAIN` | ✅ | ZaloPay API endpoint |
-| `VNPAY_TMNCODE` | ✅ | VNPay Terminal Code |
-| `VNPAY_SECRET` | ✅ | VNPay Hash Secret Key |
-| `VNPAY_URL` | ✅ | VNPay Payment URL |
-| `WEBSITE_DOMAIN` | ✅ | Your website URL (for payment callbacks) |
-| `TINYMCE_API_KEY` | ❌ | TinyMCE API key (optional) |
+| `DATABASE` | Yes | MongoDB connection string (Atlas or local) |
+| `JWT_SECRET` | Yes | Secret key for JWT token signing |
+| `GMAIL_USER` | Yes | Gmail account for sending emails |
+| `GMAIL_PASS` | Yes | Gmail App Password (not regular password) |
+| `CLOUDINARY_NAME` | Yes | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Yes | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Yes | Cloudinary API secret |
+| `ZALOPAY_APPID` | Yes | ZaloPay App ID (sandbox: 2554) |
+| `ZALOPAY_KEY1` | Yes | ZaloPay Key 1 |
+| `ZALOPAY_KEY2` | Yes | ZaloPay Key 2 |
+| `ZALOPAY_DOMAIN` | Yes | ZaloPay API endpoint |
+| `VNPAY_TMNCODE` | Yes | VNPay Terminal Code |
+| `VNPAY_SECRET` | Yes | VNPay Hash Secret Key |
+| `VNPAY_URL` | Yes | VNPay Payment URL |
+| `WEBSITE_DOMAIN` | Yes | Your website URL (for payment callbacks) |
+| `TINYMCE_API_KEY` | No | TinyMCE API key (optional) |
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Client Routes
 
@@ -434,15 +434,15 @@ TINYMCE_API_KEY=""
 | `POST` | `/reset-password` | Update new password |
 | `POST` | `/logout` | Logout admin |
 
-## ⚠️ Important Notes & Limitations
+## Important Notes & Limitations
 
 ### Email/OTP Functionality on Render
 
 **Note:** Render's free tier blocks outbound network traffic on certain ports, which affects email sending functionality:
 
-- ✅ **Local Development**: Email sending (OTP for password recovery) works perfectly
-- ❌ **Live Demo (Render)**: Email/OTP features are **disabled** due to Render's network restrictions
-- 🔧 **Workaround**: For production deployment, consider:
+- **Local Development**: Email sending (OTP for password recovery) works perfectly
+- **Live Demo (Render)**: Email/OTP features are **disabled** due to Render's network restrictions
+- **Workaround**: For production deployment, consider:
   - Using Render's paid plan with custom network configuration
   - Deploying to alternative platforms (Heroku, Railway, DigitalOcean, AWS)
   - Implementing SMS-based OTP as an alternative
@@ -454,9 +454,9 @@ TINYMCE_API_KEY=""
 
 **Security Note:** Admin account creation follows a secure manual verification process:
 
-- 🔓 **Public Registration Available**: Anyone can register at `/admin/register`, but accounts require manual activation
-- ✅ **Manual Verification Required**: New accounts cannot login until verified and activated by authorized personnel
-- 🔐 **Process**:
+- **Public Registration Available**: Anyone can register at `/admin/register`, but accounts require manual activation
+- **Manual Verification Required**: New accounts cannot login until verified and activated by authorized personnel
+- **Process**:
   1. User registers via admin registration page (`/admin/register`)
   2. Account is created in database with status `"initial"` (not yet verified)
   3. User **cannot login** - login only works for accounts with status `"active"`
@@ -474,17 +474,17 @@ TINYMCE_API_KEY=""
 - Maintains security through manual activation workflow
 - Follows enterprise-level access control best practices
 
-## 🔒 Security Features
+## Security Features
 
-- ✅ JWT-based authentication with httpOnly cookies
-- ✅ Password hashing with bcrypt.js
-- ✅ Input validation (client & server side with JustValidate and Joi)
-- ✅ **Role-Based Access Control (RBAC)** - Fine-grained permission system
-- ✅ Secure file upload validation
-- ✅ NoSQL injection prevention
-- ✅ XSS protection
+- JWT-based authentication with httpOnly cookies
+- Password hashing with bcrypt.js
+- Input validation (client & server side with JustValidate and Joi)
+- **Role-Based Access Control (RBAC)** - Fine-grained permission system
+- Secure file upload validation
+- NoSQL injection prevention
+- XSS protection
 
-### 🔐 RBAC Implementation
+### RBAC Implementation
 
 The project implements a sophisticated Role-Based Access Control system:
 
@@ -511,7 +511,7 @@ The project implements a sophisticated Role-Based Access Control system:
 - `/admin/setting/role/undo/:id` - Restore deleted role
 - `/admin/setting/role/destroy/:id` - Permanently delete role
 
-## 📦 Key Dependencies
+## Key Dependencies
 
 | Package | Version | Purpose |
 |---------|---------|---------|
@@ -534,7 +534,7 @@ The project implements a sophisticated Role-Based Access Control system:
 | dotenv | ^17.2.1 | Environment variables |
 | nodemon | ^3.1.10 | Development auto-reload |
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Course instructors
 - GitHub Student Developer Pack
