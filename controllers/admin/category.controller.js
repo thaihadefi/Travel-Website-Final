@@ -4,6 +4,7 @@ const categoryHelper = require("../../helpers/category.helper");
 const moment = require('moment');
 const slugify = require('slugify');
 const { paginationLimit } = require("../../config/variable.config");
+const cloudinaryHelper = require("../../helpers/cloudinary.helper");
 
 module.exports.list = async (req, res) => {
   const find = {
@@ -268,6 +269,16 @@ module.exports.changeMultiPatch = async (req, res) => {
         })
         break;
       case "destroy":
+        // Get all categories to delete avatars from Cloudinary
+        const categoriesToDestroy = await Category.find({ _id: { $in: ids } });
+        
+        // Delete avatars from Cloudinary
+        for (const category of categoriesToDestroy) {
+          if (category.avatar) {
+            await cloudinaryHelper.deleteImage(category.avatar);
+          }
+        }
+        
         await Category.deleteMany({
           _id: { $in: ids }
         })
@@ -394,6 +405,13 @@ module.exports.undoPatch = async (req, res) => {
 module.exports.destroyDelete = async (req, res) => {
   try {
     const id = req.params.id;
+
+    // Get category info to delete avatar from Cloudinary
+    const category = await Category.findOne({ _id: id });
+    
+    if (category && category.avatar) {
+      await cloudinaryHelper.deleteImage(category.avatar);
+    }
 
     await Category.deleteOne({
       _id: id

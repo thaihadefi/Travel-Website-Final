@@ -6,6 +6,7 @@ const AccountAdmin = require("../../models/account-admin.model");
 const moment = require('moment');
 const slugify = require('slugify');
 const { paginationLimit } = require("../../config/variable.config");
+const cloudinaryHelper = require("../../helpers/cloudinary.helper");
 
 module.exports.list = async (req, res) => {
   const find = {
@@ -419,6 +420,23 @@ module.exports.destroyDelete = async (req, res) => {
   try {
     const id = req.params.id;
 
+    // Get tour info to delete images from Cloudinary
+    const tour = await Tour.findOne({ _id: id });
+    
+    if (tour) {
+      // Delete avatar from Cloudinary
+      if (tour.avatar) {
+        await cloudinaryHelper.deleteImage(tour.avatar);
+      }
+      
+      // Delete all images from Cloudinary
+      if (tour.images && tour.images.length > 0) {
+        for (const imageUrl of tour.images) {
+          await cloudinaryHelper.deleteImage(imageUrl);
+        }
+      }
+    }
+
     await Tour.deleteOne({
       _id: id
     });
@@ -477,6 +495,24 @@ module.exports.changeMultiPatch = async (req, res) => {
         })
         break;
       case "destroy":
+        // Get all tours to delete images from Cloudinary
+        const toursToDestroy = await Tour.find({ _id: { $in: ids } });
+        
+        // Delete images from Cloudinary for each tour
+        for (const tour of toursToDestroy) {
+          // Delete avatar
+          if (tour.avatar) {
+            await cloudinaryHelper.deleteImage(tour.avatar);
+          }
+          
+          // Delete all images
+          if (tour.images && tour.images.length > 0) {
+            for (const imageUrl of tour.images) {
+              await cloudinaryHelper.deleteImage(imageUrl);
+            }
+          }
+        }
+        
         await Tour.deleteMany({
           _id: { $in: ids }
         })
