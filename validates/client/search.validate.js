@@ -23,9 +23,8 @@ module.exports.searchGet = (req, res, next) => {
 
   const { error } = schema.validate(req.query, { abortEarly: false });
   if (error) {
-    // Redirect to home with flash message
-    req.flash("error", error.details[0].message);
-    res.redirect("back");
+    // Invalid query params: drop them and show the plain search page
+    res.redirect("/search");
     return;
   }
 

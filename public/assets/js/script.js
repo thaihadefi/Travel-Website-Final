@@ -341,9 +341,21 @@ if(orderForm) {
         errorMessage: "Phone number is not valid!"
       },
     ])
+    .addField('#email-input', [
+      {
+        validator: (value) => {
+          if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            return false;
+          }
+          return true;
+        },
+        errorMessage: "Email is not valid!"
+      },
+    ])
     .onSuccess((event) => {
       const fullName = event.target.fullName.value;
       const phone = event.target.phone.value;
+      const email = event.target.email.value;
       const note = event.target.note.value;
       const paymentMethod = event.target.method.value;
 
@@ -376,6 +388,7 @@ if(orderForm) {
         const dataFinal = {
           fullName: fullName,
           phone: phone,
+          email: email,
           note: note,
           paymentMethod: paymentMethod,
           items: cleanedItems

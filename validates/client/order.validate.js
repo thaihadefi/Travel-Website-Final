@@ -41,6 +41,9 @@ module.exports.createPost = (req, res, next) => {
   const schema = Joi.object({
     fullName: Joi.string().min(3).required(),
   phone: Joi.string().required(),
+  email: Joi.string().email().allow('').optional().messages({
+    "string.email": "Email is not valid!"
+  }),
   // Allow optional order note
   note: Joi.string().allow('').optional(),
   paymentMethod: Joi.string().required(),

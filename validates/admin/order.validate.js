@@ -25,14 +25,14 @@ module.exports.editPatch = async (req, res, next) => {
         "string.max": "Note must not exceed 500 characters!",
       }),
     status: Joi.string()
-      .valid('initial', 'confirmed', 'canceled', 'completed')
+      .valid('initial', 'done', 'cancel')
       .required()
       .messages({
         "string.empty": "Please select status!",
         "any.only": "Invalid status!",
       }),
     paymentMethod: Joi.string()
-      .valid('cash', 'zalopay', 'vnpay', 'bank-transfer')
+      .valid('money', 'bank', 'zalopay', 'vnpay')
       .required()
       .messages({
         "string.empty": "Please select payment method!",
@@ -50,9 +50,10 @@ module.exports.editPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 

@@ -120,6 +120,14 @@ module.exports.create = async (req, res) => {
 }
 
 module.exports.createPost = async (req, res) => {
+  if(!req.permissions.includes("category-create")) {
+    res.json({
+      code: "error",
+      message: "No permission!"
+    })
+    return;
+  }
+
   if(req.body.position) {
     req.body.position = parseInt(req.body.position);
   } else {
@@ -170,6 +178,14 @@ module.exports.edit = async (req, res) => {
 
 module.exports.editPatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("category-edit")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     if(req.body.position) {
@@ -230,6 +246,17 @@ module.exports.deletePatch = async (req, res) => {
 module.exports.changeMultiPatch = async (req, res) => {
   try {
     const { value, ids } = req.body;
+
+    const editValues = ["active", "inactive", "undo"];
+    const deleteValues = ["delete", "destroy"];
+    if(editValues.includes(value) && !req.permissions.includes("category-edit")) {
+      res.json({ code: "error", message: "No permission!" })
+      return;
+    }
+    if(deleteValues.includes(value) && !req.permissions.includes("category-delete")) {
+      res.json({ code: "error", message: "No permission!" })
+      return;
+    }
 
     switch (value) {
       case "active":
@@ -304,6 +331,14 @@ module.exports.changeMultiPatch = async (req, res) => {
 
 module.exports.deletePatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("category-delete")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     await Category.updateOne({
@@ -313,7 +348,7 @@ module.exports.deletePatch = async (req, res) => {
       deletedAt: Date.now(),
       deletedBy: req.account.id
     });
-    
+
     res.json({
       code: "success",
       message: "Delete category successfully!"
@@ -382,6 +417,14 @@ module.exports.trash = async (req, res) => {
 
 module.exports.undoPatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("category-edit")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     await Category.updateOne({
@@ -404,6 +447,14 @@ module.exports.undoPatch = async (req, res) => {
 
 module.exports.destroyDelete = async (req, res) => {
   try {
+    if(!req.permissions.includes("category-delete")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     // Get category info to delete avatar from Cloudinary

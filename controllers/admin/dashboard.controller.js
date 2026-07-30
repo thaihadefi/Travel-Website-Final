@@ -1,5 +1,7 @@
 const AccountAdmin = require("../../models/account-admin.model");
 const Order = require("../../models/order.model");
+const Tour = require("../../models/tour.model");
+const Category = require("../../models/category.model");
 const moment = require("moment");
 const { paginationLimit } = require("../../config/variable.config");
 
@@ -25,6 +27,54 @@ module.exports.dashboard = async (req, res) => {
   overview.totalRevenue = paidOrders.reduce((total, item) => total + item.total, 0);
   // End Overview
 
+  // Category Breakdown: resolve each order item's tour to its category
+  const tourIds = [...new Set(orderList.flatMap(order => order.items.map(item => item.tourId)).filter(Boolean))];
+  const tourList = await Tour.find({ _id: { $in: tourIds } }, { category: 1 });
+  const tourCategoryMap = {};
+  for (const tour of tourList) {
+    tourCategoryMap[tour.id] = tour.category || "";
+  }
+
+  const categoryList = await Category.find({}, { name: 1 });
+  const categoryNameMap = {};
+  for (const category of categoryList) {
+    categoryNameMap[category.id] = category.name;
+  }
+
+  const categoryBreakdownMap = new Map();
+  const getCategoryBucket = (categoryId) => {
+    const key = categoryId || "uncategorized";
+    if (!categoryBreakdownMap.has(key)) {
+      categoryBreakdownMap.set(key, {
+        categoryName: categoryNameMap[categoryId] || "Uncategorized",
+        totalBookings: 0,
+        totalRevenue: 0
+      });
+    }
+    return categoryBreakdownMap.get(key);
+  };
+
+  // Bookings: every tour line item across all non-deleted orders
+  for (const order of orderList) {
+    for (const item of order.items) {
+      getCategoryBucket(tourCategoryMap[item.tourId]).totalBookings += 1;
+    }
+  }
+
+  // Revenue: only from paid orders
+  for (const order of paidOrders) {
+    for (const item of order.items) {
+      const itemRevenue = (item.quantityAdult || 0) * (item.priceNewAdult || 0)
+        + (item.quantityChildren || 0) * (item.priceNewChildren || 0)
+        + (item.quantityBaby || 0) * (item.priceNewBaby || 0);
+      getCategoryBucket(tourCategoryMap[item.tourId]).totalRevenue += itemRevenue;
+    }
+  }
+
+  const categoryBreakdown = Array.from(categoryBreakdownMap.values())
+    .sort((a, b) => b.totalRevenue - a.totalRevenue);
+  // End Category Breakdown
+
   // Recent Orders
   const recentOrders = await Order
     .find({
@@ -43,7 +93,8 @@ module.exports.dashboard = async (req, res) => {
   res.render("admin/pages/dashboard", {
     pageTitle: "Overview",
     overview: overview,
-    recentOrders: recentOrders
+    recentOrders: recentOrders,
+    categoryBreakdown: categoryBreakdown
   });
 }
 

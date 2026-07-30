@@ -4,6 +4,13 @@ const { paginationLimit } = require("../../config/variable.config");
 
 module.exports.list = async (req, res) => {
   try {
+    if(!req.permissions.includes("user-view")) {
+      res.render("admin/pages/error-404", {
+        pageTitle: "404 Not Found"
+      });
+      return;
+    }
+
     const find = {
       deleted: false
     };

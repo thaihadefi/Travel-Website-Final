@@ -5,6 +5,7 @@ const schema = new mongoose.Schema(
     code: String,
     fullName: String,
     phone: String,
+    email: String,
     note: String,
     items: Array,
     subTotal: Number,

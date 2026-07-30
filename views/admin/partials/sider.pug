@@ -10,8 +10,9 @@ nav.sider
     if (permissions.includes("tour-view"))
       li
         a(href=`/${pathAdmin}/tour/list`) <i class="fa-solid fa-table-list"></i> Tour Management
-    li
-      a(href=`/${pathAdmin}/order/list`) <i class="fa-solid fa-list-check"></i> Order Management
+    if (permissions.includes("order-view"))
+      li
+        a(href=`/${pathAdmin}/order/list`) <i class="fa-solid fa-list-check"></i> Order Management
     if (permissions.includes("user-view"))
       li
         a(href=`/${pathAdmin}/user/list`) <i class="fa-solid fa-users"></i> Client Management
