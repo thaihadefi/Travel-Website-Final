@@ -31,9 +31,10 @@ module.exports.editPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 
@@ -81,9 +82,10 @@ module.exports.changePasswordPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 

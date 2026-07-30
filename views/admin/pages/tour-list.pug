@@ -28,7 +28,7 @@ block main
           select(filter-category)
             option(value="") Category
             each item in categoryList
-              option(value=item.id) #{item.title}
+              option(value=item.id) #{item.name}
         .inner-item.inner-reset(filter-reset)
           <i class="fa-solid fa-rotate-left"></i> Reset Filter
     //- End Section 4

@@ -45,9 +45,10 @@ module.exports.websiteInfoPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 
@@ -102,9 +103,10 @@ module.exports.accountAdminCreatePost = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 
@@ -159,9 +161,10 @@ module.exports.accountAdminEditPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 
@@ -196,9 +199,10 @@ module.exports.roleCreatePost = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 
@@ -233,9 +237,10 @@ module.exports.roleEditPatch = async (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
-    req.flash("error", errors);
-    res.redirect("back");
+    res.json({
+      code: "error",
+      message: error.details[0].message
+    })
     return;
   }
 

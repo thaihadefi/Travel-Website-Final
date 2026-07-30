@@ -36,6 +36,28 @@ block main
         canvas(id="revenue-chart")
     //- End Section 2
 
+    //- Section 2b - Category Breakdown
+    .section-3
+      .inner-title Category Breakdown
+      .table-1
+        table
+          thead
+            tr
+              th Category
+              th Bookings
+              th.text-right Revenue
+          tbody
+            if categoryBreakdown && categoryBreakdown.length > 0
+              each item in categoryBreakdown
+                tr
+                  td #{item.categoryName}
+                  td #{item.totalBookings.toLocaleString("vi-VN")}
+                  td.text-right #{item.totalRevenue.toLocaleString("vi-VN")}đ
+            else
+              tr
+                td(colspan="3" style="text-align: center; padding: 20px;") No booking data found.
+    //- End Section 2b
+
     //- Section 3
     .section-3
       .inner-title Recent Orders
@@ -67,14 +89,14 @@ block main
                           .inner-image
                             img(src=item.avatar, alt="")
                           .inner-info
-                            .inner-name #{item.title}
+                            .inner-name #{item.name}
                             .inner-quantity
-                              if item.adults > 0
-                                div Adults: #{item.adults} x #{item.priceAdults.toLocaleString("vi-VN")}đ
-                              if item.children > 0
-                                div Children: #{item.children} x #{item.priceChildren.toLocaleString("vi-VN")}đ
-                              if item.babies > 0
-                                div Babies: #{item.babies} x #{item.priceBabies.toLocaleString("vi-VN")}đ
+                              if item.quantityAdult > 0
+                                div Adults: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                              if item.quantityChildren > 0
+                                div Children: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                              if item.quantityBaby > 0
+                                div Babies: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
                   td
                     div Sub Total: #{order.subTotal.toLocaleString("vi-VN")}đ
                     if order.discount > 0
@@ -83,7 +105,7 @@ block main
                     div Payment Method: #{order.paymentMethod}
                     div Payment Status: #{order.paymentStatus}
                   td
-                    - const statusClass = order.status === 'initial' ? 'badge-orange' : order.status === 'confirmed' ? 'badge-green' : order.status === 'canceled' ? 'badge-red' : order.status === 'completed' ? 'badge-blue' : 'badge-orange'
+                    - const statusClass = order.status === 'initial' ? 'badge-orange' : order.status === 'done' ? 'badge-green' : order.status === 'cancel' ? 'badge-red' : 'badge-orange'
                     .badge(class=statusClass)= order.status.charAt(0).toUpperCase() + order.status.slice(1)
                   td.text-right
                     div #{order.createdAtTime}

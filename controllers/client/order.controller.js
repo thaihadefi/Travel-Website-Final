@@ -6,6 +6,7 @@ const { paymentMethodList, paymentStatusList, statusList } = require("../../conf
 const moment = require("moment");
 const axios = require('axios').default;
 const CryptoJS = require('crypto-js');
+const mailHelper = require("../../helpers/mail.helper");
 
 module.exports.track = async (req, res) => {
   res.render("client/pages/order-track", {
@@ -163,6 +164,23 @@ module.exports.createPost = async (req, res) => {
 
     const newRecord = new Order(req.body);
     await newRecord.save();
+
+    // Send booking confirmation email if the customer provided one
+    if(req.body.email) {
+      const itemsHtml = req.body.items
+        .map(item => `<li>${item.name || "Tour"} - Adults: ${item.quantityAdult}, Children: ${item.quantityChildren}, Babies: ${item.quantityBaby}</li>`)
+        .join("");
+      const title = `Booking confirmation - ${req.body.code}`;
+      const content = `
+        <p>Hi ${req.body.fullName},</p>
+        <p>Thank you for your booking! Your order code is <b>${req.body.code}</b>.</p>
+        <ul>${itemsHtml}</ul>
+        <p>Total: ${req.body.total.toLocaleString("vi-VN")}đ</p>
+        <p>Payment method: ${req.body.paymentMethod}</p>
+        <p>Track your order anytime using your order code and phone number.</p>
+      `;
+      mailHelper.sendMail(req.body.email, title, content);
+    }
 
     res.json({
       code: "success",

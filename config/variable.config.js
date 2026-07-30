@@ -74,6 +74,10 @@ module.exports.permissionList = [
     value: "category-trash"
   },
   {
+    label: "Create Category",
+    value: "category-create"
+  },
+  {
     label: "View Tour",
     value: "tour-view"
   },
@@ -100,6 +104,22 @@ module.exports.permissionList = [
   {
     label: "Message Management",
     value: "message-view"
+  },
+  {
+    label: "View Order",
+    value: "order-view"
+  },
+  {
+    label: "Edit Order",
+    value: "order-edit"
+  },
+  {
+    label: "Delete Order",
+    value: "order-delete"
+  },
+  {
+    label: "Order Trash",
+    value: "order-trash"
   },
 ];
 

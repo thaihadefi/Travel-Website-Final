@@ -16,6 +16,10 @@ block main
       .inner-group
         label(for="phone" class="inner-label") Phone Number
         input(type="text" id="phone" name="phone" value=orderDetail.phone)
+      if orderDetail.email
+        .inner-group
+          label(class="inner-label") Email
+          input(type="text" value=orderDetail.email readonly)
       .inner-group.inner-two-col
         label(for="note" class="inner-label") Note
         textarea(id="note" name="note") #{orderDetail.note}

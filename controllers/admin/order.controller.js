@@ -2,8 +2,16 @@ const Order = require("../../models/order.model");
 const City = require("../../models/city.model");
 const { paymentMethodList, paymentStatusList, statusList, paginationLimit } = require("../../config/variable.config");
 const moment = require("moment");
+const mailHelper = require("../../helpers/mail.helper");
 
 module.exports.list = async (req, res) => {
+  if(!req.permissions.includes("order-view")) {
+    res.render("admin/pages/error-404", {
+      pageTitle: "404 Not Found"
+    });
+    return;
+  }
+
   const find = {
     deleted: false
   };
@@ -133,10 +141,45 @@ module.exports.edit = async (req, res) => {
 
 module.exports.editPatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("order-edit")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
+    const orderDetail = await Order.findOne({
+      _id: req.params.id,
+      deleted: false
+    })
+
+    if(!orderDetail) {
+      res.json({
+        code: "error",
+        message: "Order does not exist!"
+      })
+      return;
+    }
+
+    const statusChanged = req.body.status && req.body.status !== orderDetail.status;
+
     await Order.updateOne({
       _id: req.params.id,
       deleted: false
     }, req.body)
+
+    // Notify the customer by email when the status actually changes
+    if(statusChanged && orderDetail.email) {
+      const statusInfo = statusList.find(item => item.value == req.body.status);
+      const statusName = statusInfo ? statusInfo.label : req.body.status;
+      const title = `Order ${orderDetail.code} status update`;
+      const content = `
+        <p>Hi ${orderDetail.fullName},</p>
+        <p>Your order <b>${orderDetail.code}</b> status has been updated to <b>${statusName}</b>.</p>
+      `;
+      mailHelper.sendMail(orderDetail.email, title, content);
+    }
 
     res.json({
       code: "success",
@@ -153,6 +196,17 @@ module.exports.editPatch = async (req, res) => {
 module.exports.changeMultiPatch = async (req, res) => {
   try {
     const { value, ids } = req.body;
+
+    const editValues = ["undo"];
+    const deleteValues = ["delete", "destroy"];
+    if(editValues.includes(value) && !req.permissions.includes("order-edit")) {
+      res.json({ code: "error", message: "No permission!" })
+      return;
+    }
+    if(deleteValues.includes(value) && !req.permissions.includes("order-delete")) {
+      res.json({ code: "error", message: "No permission!" })
+      return;
+    }
 
     switch (value) {
       case "delete":
@@ -204,6 +258,14 @@ module.exports.changeMultiPatch = async (req, res) => {
 
 module.exports.deletePatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("order-delete")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     await Order.updateOne({
@@ -226,6 +288,13 @@ module.exports.deletePatch = async (req, res) => {
 }
 
 module.exports.trash = async (req, res) => {
+  if(!req.permissions.includes("order-trash")) {
+    res.render("admin/pages/error-404", {
+      pageTitle: "404 Not Found"
+    });
+    return;
+  }
+
   const find = {
     deleted: true
   };
@@ -276,6 +345,14 @@ module.exports.trash = async (req, res) => {
 
 module.exports.undoPatch = async (req, res) => {
   try {
+    if(!req.permissions.includes("order-edit")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     await Order.updateOne({
@@ -298,6 +375,14 @@ module.exports.undoPatch = async (req, res) => {
 
 module.exports.destroyDelete = async (req, res) => {
   try {
+    if(!req.permissions.includes("order-delete")) {
+      res.json({
+        code: "error",
+        message: "No permission!"
+      })
+      return;
+    }
+
     const id = req.params.id;
 
     await Order.deleteOne({
