@@ -1,9 +1,10 @@
 # Travel Website: Full-Stack Online Tour Booking & Management Platform
 
-[![Express](https://img.shields.io/badge/Backend-Express%205-339933?style=flat-square&logo=express)](https://expressjs.com/)
 [![JavaScript](https://img.shields.io/badge/Language-JavaScript-F7DF1E?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Backend-Express%205-339933?style=flat-square&logo=express)](https://expressjs.com/)
 [![Template](https://img.shields.io/badge/Template-Pug-A86454?style=flat-square&logo=pug)](https://pugjs.org/)
+[![CSS3](https://img.shields.io/badge/Styling-CSS3-1572B6?style=flat-square&logo=css3)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 [![Docker](https://img.shields.io/badge/Container-Docker-2496ED?style=flat-square&logo=docker)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
@@ -51,11 +52,11 @@ travel-website/
 ├── controllers/               # HTTP request handlers (admin/, client/)
 │   ├── admin/                 # Back-office controllers (account, category, contact, dashboard, message, order, profile, setting, tour, upload, user)
 │   └── client/                # Storefront controllers (cart, category, contact, home, order, search, tour)
-├── helpers/                   # 4 Utility helpers (category hierarchy tree, Cloudinary storage upload, mailer, string generator)
+├── helpers/                   # Utility helpers (category hierarchy tree, Cloudinary storage upload, mailer, string generator)
 ├── middlewares/               # Custom Express middlewares (admin/, client/)
 │   ├── admin/                 # JWT authentication verification & RBAC setting middlewares
 │   └── client/                # Customer category tree, city list, & website info middlewares
-├── models/                    # 10 Mongoose data schemas (Tour, Category, City, Order, Role, AccountAdmin, ContactMessage, etc.)
+├── models/                    # Mongoose data models & schemas (Tour, Category, City, Order, Role, AccountAdmin, ContactMessage, etc.)
 ├── public/                    # Static web assets (admin/, assets/)
 │   ├── admin/assets/          # Back-office CSS styles, JavaScript scripts, & icons
 │   └── assets/                # Customer storefront CSS styles, JavaScript scripts, & media
